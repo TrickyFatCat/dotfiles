@@ -1,0 +1,302 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+add_newline = false
+
+format = """
+[█](surface0)\
+$shell\
+$directory\
+[](fg:surface0 bg:surface1)\
+$git_branch\
+$git_commit\
+$pijul_channel\
+[](fg:surface1 bg:surface2)\
+$git_status\
+[](fg:surface2)\
+$fill\
+[](fg:surface2)\
+$cmd_duration\
+$status\
+[](bg:surface2 fg:surface1)\
+$battery\
+[](bg:surface1 fg:surface0)\
+$time\
+[█](surface0)\
+$line_break$character"""
+
+palette = 'catppuccin_mocha'
+
+[palettes.catppuccin_latte]
+overlay2 = "#7c7f93"
+rosewater = "#dc8a78"
+flamingo = "#dd7878"
+pink = "#ea76cb"
+mauve = "#8839ef"
+red = "#d20f39"
+maroon = "#e64553"
+peach = "#fe640b"
+yellow = "#df8e1d"
+green = "#40a02b"
+teal = "#179299"
+sky = "#04a5e5"
+sapphire = "#209fb5"
+blue = "#1e66f5"
+lavender = "#7287fd"
+text = "#4c4f69"
+subtext1 = "#5c5f77"
+subtext0 = "#6c6f85"
+overlay1 = "#8c8fa1"
+overlay0 = "#9ca0b0"
+surface2 = "#acb0be"
+surface1 = "#bcc0cc"
+surface0 = "#ccd0da"
+base = "#eff1f5"
+mantle = "#e6e9ef"
+crust = "#dce0e8"
+
+[palettes.catppuccin_frappe]
+rosewater = "#f2d5cf"
+flamingo = "#eebebe"
+pink = "#f4b8e4"
+mauve = "#ca9ee6"
+red = "#e78284"
+maroon = "#ea999c"
+peach = "#ef9f76"
+yellow = "#e5c890"
+green = "#a6d189"
+teal = "#81c8be"
+sky = "#99d1db"
+sapphire = "#85c1dc"
+blue = "#8caaee"
+lavender = "#babbf1"
+text = "#c6d0f5"
+subtext1 = "#b5bfe2"
+subtext0 = "#a5adce"
+overlay2 = "#949cbb"
+overlay1 = "#838ba7"
+overlay0 = "#737994"
+surface2 = "#626880"
+surface1 = "#51576d"
+surface0 = "#414559"
+base = "#303446"
+mantle = "#292c3c"
+crust = "#232634"
+
+[palettes.catppuccin_macchiato]
+rosewater = "#f4dbd6"
+flamingo = "#f0c6c6"
+pink = "#f5bde6"
+mauve = "#c6a0f6"
+red = "#ed8796"
+maroon = "#ee99a0"
+peach = "#f5a97f"
+yellow = "#eed49f"
+green = "#a6da95"
+teal = "#8bd5ca"
+sky = "#91d7e3"
+sapphire = "#7dc4e4"
+blue = "#8aadf4"
+lavender = "#b7bdf8"
+text = "#cad3f5"
+subtext1 = "#b8c0e0"
+subtext0 = "#a5adcb"
+overlay2 = "#939ab7"
+overlay1 = "#8087a2"
+overlay0 = "#6e738d"
+surface2 = "#5b6078"
+surface1 = "#494d64"
+surface0 = "#363a4f"
+base = "#24273a"
+mantle = "#1e2030"
+crust = "#181926"
+
+[palettes.catppuccin_mocha]
+rosewater = "#f5e0dc"
+flamingo = "#f2cdcd"
+pink = "#f5c2e7"
+mauve = "#cba6f7"
+red = "#f38ba8"
+maroon = "#eba0ac"
+peach = "#fab387"
+yellow = "#f9e2af"
+green = "#a6e3a1"
+teal = "#94e2d5"
+sky = "#89dceb"
+sapphire = "#74c7ec"
+blue = "#89b4fa"
+lavender = "#b4befe"
+text = "#cdd6f4"
+subtext1 = "#bac2de"
+subtext0 = "#a6adc8"
+overlay2 = "#9399b2"
+overlay1 = "#7f849c"
+overlay0 = "#6c7086"
+surface2 = "#585b70"
+surface1 = "#45475a"
+surface0 = "#313244"
+base = "#1e1e2e"
+mantle = "#181825"
+crust = "#11111b"
+
+[fill]
+disabled = false
+symbol = ' '
+
+[shell]
+disabled = false
+bash_indicator = ' '
+fish_indicator = ' '
+zsh_indicator = ' '
+nu_indicator = '󰄛 '
+powershell_indicator = ' '
+cmd_indicator = ' '
+style = 'fg:mauve bg:surface0'
+format = '[ $indicator ]($style)'
+
+[directory]
+read_only = ' '
+read_only_style = 'red'
+style = 'fg:blue bg:surface0'
+format = '[$path ]($style)'
+truncation_length = 3
+truncation_symbol = '../'
+
+[directory.substitutions]
+"Documents" = "󰈙 Documents"
+"Downloads" = " Downloads"
+"Music" = "󰝚 Music"
+"Pictures" = " Pictures"
+"Videos" = " Videos"
+"Tools" = "󱁤 Tools"
+"Projects" = " Projects"
+"Apps" = " Apps"
+"Games" = "󰊗 Games"
+"Steam" = " Steam"
+"Unreal" = " Unreal"
+"Unity" = " Unity"
+
+[git_branch]
+symbol = ''
+style = 'fg:flamingo bg:surface1'
+format = '[ $symbol $branch ]($style)'
+
+[git_commit]
+disabled = false
+only_detached = false
+tag_disabled = false
+style = 'fg:maroon bg:surface1'
+tag_symbol = ' 󱈤 '
+format = '[ $hash[$tag](fg:flamingo bg:surface1) ]($style)'
+
+[git_status]
+conflicted = '[$count󱪗 ](fg:red bg:surface2)'
+ahead = '[+${count} ](fg:green bg:surface2)'
+behind = '[-${count} ](fg:red bg:surface2)'
+diverged = '[ [|](fg:yellow bg:surface2)$ahead|$behind]'
+up_to_date = ''
+untracked = '[$count󰷊 ](fg:mauve bg:surface2)'
+stashed = '[$count󰥥 ](fg:yellow bg:surface2)'
+modified = '[$count󰷈 ](fg:peach bg:surface2)'
+staged = '[$count󱪝 ](fg:blue bg:surface2)'
+renamed = '[$count󰤘 ]'
+deleted = '[$count󱪟 ](fg:red bg:surface2)'
+typechanged = '󰬲 '
+style = 'fg:teal bg:surface2'
+format = '[ $all_status$ahead_behind ]($style)'
+
+[pijul_channel]
+disabled = false
+symbol = ''
+style = 'fg:flamingo bg:surface1'
+format = '[ $symbol $channel ]($style)'
+
+[cmd_duration]
+style = 'bg:surface2 fg:sky'
+format = '[ $duration]($style)'
+
+[status]
+disabled = false
+symbol = '[ ](bg:surface2 fg:red)'
+success_symbol = '[ ](bg:surface2 fg:green)'
+recognize_signal_code = false
+style = 'bg:surface2 fg:green'
+format = '[ $symbol ]($style)'
+
+[battery]
+disabled = false
+charging_symbol = '󰂄'
+unknown_symbol = '󰂑'
+format = '[ $percentage $symbol ]($style)'
+
+[[battery.display]]
+threshold = 5
+style = 'bg:surface1 fg:red'
+discharging_symbol = '󰂃'
+
+[[battery.display]]
+threshold = 10
+style = 'bg:surface1 fg:red'
+discharging_symbol = '󰁺'
+
+[[battery.display]]
+threshold = 20
+style = 'bg:surface1 fg:red'
+discharging_symbol = '󰁻'
+
+[[battery.display]]
+threshold = 30
+style = 'bg:surface1 fg:red'
+discharging_symbol = '󰁼'
+
+[[battery.display]]
+threshold = 40
+style = 'bg:surface1 fg:peach'
+discharging_symbol = '󰁽'
+
+[[battery.display]]
+threshold = 50
+style = 'bg:surface1 fg:peach'
+discharging_symbol = '󰁾'
+
+[[battery.display]]
+threshold = 60
+style = 'bg:surface1 fg:yellow'
+discharging_symbol = '󰁿'
+
+[[battery.display]]
+threshold = 70
+style = 'bg:surface1 fg:yellow'
+discharging_symbol = '󰂀'
+
+[[battery.display]]
+threshold = 80
+style = 'bg:surface1 fg:green'
+discharging_symbol = '󰂁'
+
+[[battery.display]]
+threshold = 90
+style = 'bg:surface1 fg:green'
+discharging_symbol = '󰂂'
+
+[[battery.display]]
+threshold = 100
+style = 'bg:surface1 fg:green'
+discharging_symbol = '󰁹'
+
+[time]
+disabled = false
+time_format = '%R'
+style = 'fg:text bg:surface0'
+format = '[ $time   ]($style)'
+
+[line_break]
+disabled = false
+
+[character]
+disabled = false
+success_symbol = '[ ](bold fg:green)'
+error_symbol = '[ ](bold fg:red)'
+vimcmd_symbol = '[ ](bold fg:green)'
+vimcmd_replace_one_symbol = '[ ](bold fg:lavender)'
+vimcmd_replace_symbol = '[ ](bold fg:lavender)'
+vimcmd_visual_symbol = '[ ](bold fg:lavender)'
