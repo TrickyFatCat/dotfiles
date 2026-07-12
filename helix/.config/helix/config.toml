@@ -1,0 +1,83 @@
+
+theme = "catppuccin_mocha"
+
+[editor]
+line-number = "relative"
+mouse = true
+bufferline = "multiple"
+cursorline = true
+rulers = [100]
+color-modes = true
+popup-border = "all"
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[editor.whitespace]
+render = "none"
+
+[editor.whitespace.characters]
+space = "·"
+nbsp = "⍽"
+nnbsp = "␣"
+tab = "→"
+newline = ""
+tabpad = "·"
+
+[editor.file-picker]
+hidden = false
+
+[editor.indent-guides]
+render = true
+skip-levels = 1
+
+[editor.inline-diagnostics]
+cursor-line = "hint"
+other-lines = "hint"
+
+[editor.lsp]
+display-inlay-hints = true
+display-messages    = true
+
+[editor.statusline]
+center = ["version-control"]
+
+[keys.normal]
+"ret" = "goto_word"
+"esc" = ["collapse_selection", "keep_primary_selection"]
+"C-S-c" = ["remove_primary_selection"]
+"C-d" = ["half_page_down", "goto_window_center"]
+"C-u" = ["half_page_up", "goto_window_center"]
+x = "select_line_below"
+X = "select_line_above"
+"C-l" = "add_newline_below"
+"C-S-l" = "add_newline_above"
+"C-g" = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw", ":rla"]
+"C-S-s" = ["move_prev_word_start", "move_next_word_end", "search_selection_detect_word_boundaries", "select_all", "select_regex"]
+"C-r" = ":config-reload"
+"S-d" = ["extend_to_line_bounds", "delete_selection"]
+
+[keys.normal."space"]
+x = ":bclose"
+X = ":bco"
+C-o = ":config-open"
+C-r = ":config-reload"
+
+[keys.select]
+"esc" = ["collapse_selection", "normal_mode"]
+"C-d" = ["half_page_down", "goto_window_center"]
+"C-u" = ["half_page_up", "goto_window_center"]
+"ret" = "goto_word"
+"C-S-c" = ["remove_primary_selection"]
+x = "select_line_below"
+X = "select_line_above"
+
+[keys.select.m]
+l = "extend_to_line_bounds"
+
+[keys.insert]
+"C-d" = ["half_page_down", "goto_window_center"]
+"C-u" = ["half_page_up", "goto_window_center"]
+"C-s" = ":w"
