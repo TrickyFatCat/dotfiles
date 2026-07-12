@@ -1,0 +1,22 @@
+# Godot specific ignores
+.godot/*
+*.uid
+*.godot
+*.import
+*.res
+*.tres
+*.tscn
+*.cfg
+
+# Binary files
+*.png
+*.jpeg
+*.bin
+*.gltf
+*.ttf
+*.pdf
+
+# Other IDEs directories
+.vscode
+.idea
+.vs
