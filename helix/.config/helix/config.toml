@@ -58,6 +58,7 @@ X = "select_line_above"
 "C-S-s" = ["move_prev_word_start", "move_next_word_end", "search_selection_detect_word_boundaries", "select_all", "select_regex"]
 "C-r" = ":config-reload"
 "S-d" = ["extend_to_line_bounds", "delete_selection"]
+";" = "flip_selections"
 
 [keys.normal."space"]
 x = ":bclose"
@@ -73,6 +74,7 @@ C-r = ":config-reload"
 "C-S-c" = ["remove_primary_selection"]
 x = "select_line_below"
 X = "select_line_above"
+";" = "flip_selections"
 
 [keys.select.m]
 l = "extend_to_line_bounds"
