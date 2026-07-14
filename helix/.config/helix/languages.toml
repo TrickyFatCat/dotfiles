@@ -1,0 +1,39 @@
+# ====================== #
+#       LANGUAGES        #
+# ====================== #
+
+# TOML
+[[language]]
+name = "toml"
+auto-format = true
+language-servers = ["tombi"]
+
+# GDscript
+[[language]]
+name = "gdscript"
+language-servers = ["godot"]
+auto-format = true
+
+# Markdown
+[[language]]
+name = "markdown"
+comment-tokens = ["-", "+", "- [ ]", ">"]
+# formatter = { command = 'prettier', args = ["--parser", "markdown"] }
+formatter = { command = "dprint", args = ["fmt", "--stdin", "md"] }
+auto-format = true
+
+# JSON
+[[language]]
+name = "json"
+# formatter = { command = "prettier", args = [ "--parser", "json" ] }
+formatter = { command = "dprint", args = ["fmt", "--stdin", "json"] }
+auto-format = true
+
+# ====================== #
+#    LANGUAGE SERVERS    #
+# ====================== #
+
+# GDscript
+[language-server.godot]
+command = "ncat"
+args = ["127.0.0.1", "6005"]
