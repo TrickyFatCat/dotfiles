@@ -1,4 +1,3 @@
-
 theme = "catppuccin_mocha"
 
 [editor]
@@ -39,7 +38,7 @@ other-lines = "hint"
 
 [editor.lsp]
 display-inlay-hints = true
-display-messages    = true
+display-messages = true
 
 [editor.statusline]
 center = ["version-control"]
@@ -55,7 +54,13 @@ X = "select_line_above"
 "C-l" = "add_newline_below"
 "C-S-l" = "add_newline_above"
 "C-g" = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw", ":rla"]
-"C-S-s" = ["move_prev_word_start", "move_next_word_end", "search_selection_detect_word_boundaries", "select_all", "select_regex"]
+"C-S-s" = [
+  "move_prev_word_start",
+  "move_next_word_end",
+  "search_selection_detect_word_boundaries",
+  "select_all",
+  "select_regex"
+]
 "C-r" = ":config-reload"
 "S-d" = ["extend_to_line_bounds", "delete_selection"]
 ";" = "flip_selections"
@@ -63,8 +68,9 @@ X = "select_line_above"
 [keys.normal."space"]
 x = ":bclose"
 X = ":bco"
-C-o = ":config-open"
-C-r = ":config-reload"
+"C-o" = ":config-open"
+"C-r" = ":config-reload"
+"l" = ":lsp-workspace-command"
 
 [keys.select]
 "esc" = ["collapse_selection", "normal_mode"]
