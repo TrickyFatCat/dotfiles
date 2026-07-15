@@ -53,7 +53,6 @@ x = "select_line_below"
 X = "select_line_above"
 "C-l" = "add_newline_below"
 "C-S-l" = "add_newline_above"
-"C-g" = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw", ":rla"]
 "C-S-s" = [
   "move_prev_word_start",
   "move_next_word_end",
@@ -71,6 +70,18 @@ X = ":bco"
 "C-o" = ":config-open"
 "C-r" = ":config-reload"
 "l" = ":lsp-workspace-command"
+
+# Git actions
+[keys.normal."space"."g"]
+"p" = "changed_file_picker"
+"d" = ":reset-diff-change"
+"l" = [
+  ":new",
+  ":insert-output lazygit",
+  ":buffer-close!",
+  ":redraw",
+  ":rla"
+]  # Open lazy git
 
 [keys.select]
 "esc" = ["collapse_selection", "normal_mode"]
