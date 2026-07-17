@@ -51,8 +51,8 @@ center = ["version-control"]
 "C-u" = ["half_page_up", "goto_window_center"]
 x = "select_line_below"
 X = "select_line_above"
-"C-l" = "add_newline_below"
-"C-S-l" = "add_newline_above"
+"A-l" = "add_newline_below"
+"A-S-l" = "add_newline_above"
 "C-S-s" = [
   "move_prev_word_start",
   "move_next_word_end",
@@ -62,7 +62,18 @@ X = "select_line_above"
 ]
 "C-r" = ":config-reload"
 "S-d" = ["extend_to_line_bounds", "delete_selection"]
-";" = "flip_selections"
+"tab" = "flip_selections"
+
+# Window controls
+"A-w" = "rotate_view"
+"A-v" = "vsplit"
+"A-s" = "hsplit"
+
+# Moving between splits
+"C-h" = "jump_view_left"
+"C-j" = "jump_view_down"
+"C-k" = "jump_view_up"
+"C-l" = "jump_view_right"
 
 [keys.normal."space"]
 x = ":bclose"
