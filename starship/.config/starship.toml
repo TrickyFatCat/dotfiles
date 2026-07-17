@@ -1,4 +1,4 @@
-"$schema" = 'https://starship.rs/config-schema.json'
+"$schema" = "https://starship.rs/config-schema.json"
 
 add_newline = false
 
@@ -24,7 +24,7 @@ $time\
 [█](surface0)\
 $line_break$character"""
 
-palette = 'catppuccin_mocha'
+palette = "catppuccin_mocha"
 
 [palettes.catppuccin_latte]
 overlay2 = "#7c7f93"
@@ -140,26 +140,26 @@ crust = "#11111b"
 
 [fill]
 disabled = false
-symbol = ' '
+symbol = " "
 
 [shell]
 disabled = false
-bash_indicator = ' '
-fish_indicator = ' '
-zsh_indicator = ' '
-nu_indicator = '󰄛 '
-powershell_indicator = ' '
-cmd_indicator = ' '
-style = 'fg:mauve bg:surface0'
-format = '[ $indicator ]($style)'
+bash_indicator = " "
+fish_indicator = " "
+zsh_indicator = " "
+nu_indicator = "󰄛 "
+powershell_indicator = " "
+cmd_indicator = " "
+style = "fg:mauve bg:surface0"
+format = "[ $indicator ]($style)"
 
 [directory]
-read_only = ' '
-read_only_style = 'red'
-style = 'fg:blue bg:surface0'
-format = '[$path ]($style)'
+read_only = " "
+read_only_style = "red"
+style = "fg:blue bg:surface0"
+format = "[$path ]($style)"
 truncation_length = 3
-truncation_symbol = '../'
+truncation_symbol = "../"
 
 [directory.substitutions]
 "Documents" = "󰈙 Documents"
@@ -174,129 +174,130 @@ truncation_symbol = '../'
 "Steam" = " Steam"
 "Unreal" = " Unreal"
 "Unity" = " Unity"
+"Godot" = "󰚩 Godot"
 
 [git_branch]
-symbol = ''
-style = 'fg:flamingo bg:surface1'
-format = '[ $symbol $branch ]($style)'
+symbol = ""
+style = "fg:flamingo bg:surface1"
+format = "[ $symbol $branch ]($style)"
 
 [git_commit]
 disabled = false
 only_detached = false
 tag_disabled = false
-style = 'fg:maroon bg:surface1'
-tag_symbol = ' 󱈤 '
-format = '[ $hash[$tag](fg:flamingo bg:surface1) ]($style)'
+style = "fg:maroon bg:surface1"
+tag_symbol = " 󱈤 "
+format = "[ $hash[$tag](fg:flamingo bg:surface1) ]($style)"
 
 [git_status]
-conflicted = '[$count󱪗 ](fg:red bg:surface2)'
-ahead = '[+${count} ](fg:green bg:surface2)'
-behind = '[-${count} ](fg:red bg:surface2)'
-diverged = '[ [|](fg:yellow bg:surface2)$ahead|$behind]'
-up_to_date = ''
-untracked = '[$count󰷊 ](fg:mauve bg:surface2)'
-stashed = '[$count󰥥 ](fg:yellow bg:surface2)'
-modified = '[$count󰷈 ](fg:peach bg:surface2)'
-staged = '[$count󱪝 ](fg:blue bg:surface2)'
-renamed = '[$count󰤘 ]'
-deleted = '[$count󱪟 ](fg:red bg:surface2)'
-typechanged = '󰬲 '
-style = 'fg:teal bg:surface2'
-format = '[ $all_status$ahead_behind ]($style)'
+conflicted = "[$count󱪗 ](fg:red bg:surface2)"
+ahead = "[+${count} ](fg:green bg:surface2)"
+behind = "[-${count} ](fg:red bg:surface2)"
+diverged = "[ [|](fg:yellow bg:surface2)$ahead|$behind]"
+up_to_date = ""
+untracked = "[$count󰷊 ](fg:mauve bg:surface2)"
+stashed = "[$count󰥥 ](fg:yellow bg:surface2)"
+modified = "[$count󰷈 ](fg:peach bg:surface2)"
+staged = "[$count󱪝 ](fg:blue bg:surface2)"
+renamed = "[$count󰤘 ]"
+deleted = "[$count󱪟 ](fg:red bg:surface2)"
+typechanged = "󰬲 "
+style = "fg:teal bg:surface2"
+format = "[ $all_status$ahead_behind ]($style)"
 
 [pijul_channel]
 disabled = false
-symbol = ''
-style = 'fg:flamingo bg:surface1'
-format = '[ $symbol $channel ]($style)'
+symbol = ""
+style = "fg:flamingo bg:surface1"
+format = "[ $symbol $channel ]($style)"
 
 [cmd_duration]
-style = 'bg:surface2 fg:sky'
-format = '[ $duration]($style)'
+style = "bg:surface2 fg:sky"
+format = "[ $duration]($style)"
 
 [status]
 disabled = false
-symbol = '[ ](bg:surface2 fg:red)'
-success_symbol = '[ ](bg:surface2 fg:green)'
+symbol = "[ ](bg:surface2 fg:red)"
+success_symbol = "[ ](bg:surface2 fg:green)"
 recognize_signal_code = false
-style = 'bg:surface2 fg:green'
-format = '[ $symbol ]($style)'
+style = "bg:surface2 fg:green"
+format = "[ $symbol ]($style)"
 
 [battery]
 disabled = false
-charging_symbol = '󰂄'
-unknown_symbol = '󰂑'
-format = '[ $percentage $symbol ]($style)'
+charging_symbol = "󰂄"
+unknown_symbol = "󰂑"
+format = "[ $percentage $symbol ]($style)"
 
 [[battery.display]]
 threshold = 5
-style = 'bg:surface1 fg:red'
-discharging_symbol = '󰂃'
+style = "bg:surface1 fg:red"
+discharging_symbol = "󰂃"
 
 [[battery.display]]
 threshold = 10
-style = 'bg:surface1 fg:red'
-discharging_symbol = '󰁺'
+style = "bg:surface1 fg:red"
+discharging_symbol = "󰁺"
 
 [[battery.display]]
 threshold = 20
-style = 'bg:surface1 fg:red'
-discharging_symbol = '󰁻'
+style = "bg:surface1 fg:red"
+discharging_symbol = "󰁻"
 
 [[battery.display]]
 threshold = 30
-style = 'bg:surface1 fg:red'
-discharging_symbol = '󰁼'
+style = "bg:surface1 fg:red"
+discharging_symbol = "󰁼"
 
 [[battery.display]]
 threshold = 40
-style = 'bg:surface1 fg:peach'
-discharging_symbol = '󰁽'
+style = "bg:surface1 fg:peach"
+discharging_symbol = "󰁽"
 
 [[battery.display]]
 threshold = 50
-style = 'bg:surface1 fg:peach'
-discharging_symbol = '󰁾'
+style = "bg:surface1 fg:peach"
+discharging_symbol = "󰁾"
 
 [[battery.display]]
 threshold = 60
-style = 'bg:surface1 fg:yellow'
-discharging_symbol = '󰁿'
+style = "bg:surface1 fg:yellow"
+discharging_symbol = "󰁿"
 
 [[battery.display]]
 threshold = 70
-style = 'bg:surface1 fg:yellow'
-discharging_symbol = '󰂀'
+style = "bg:surface1 fg:yellow"
+discharging_symbol = "󰂀"
 
 [[battery.display]]
 threshold = 80
-style = 'bg:surface1 fg:green'
-discharging_symbol = '󰂁'
+style = "bg:surface1 fg:green"
+discharging_symbol = "󰂁"
 
 [[battery.display]]
 threshold = 90
-style = 'bg:surface1 fg:green'
-discharging_symbol = '󰂂'
+style = "bg:surface1 fg:green"
+discharging_symbol = "󰂂"
 
 [[battery.display]]
 threshold = 100
-style = 'bg:surface1 fg:green'
-discharging_symbol = '󰁹'
+style = "bg:surface1 fg:green"
+discharging_symbol = "󰁹"
 
 [time]
 disabled = false
-time_format = '%R'
-style = 'fg:text bg:surface0'
-format = '[ $time   ]($style)'
+time_format = "%R"
+style = "fg:text bg:surface0"
+format = "[ $time   ]($style)"
 
 [line_break]
 disabled = false
 
 [character]
 disabled = false
-success_symbol = '[ ](bold fg:green)'
-error_symbol = '[ ](bold fg:red)'
-vimcmd_symbol = '[ ](bold fg:green)'
-vimcmd_replace_one_symbol = '[ ](bold fg:lavender)'
-vimcmd_replace_symbol = '[ ](bold fg:lavender)'
-vimcmd_visual_symbol = '[ ](bold fg:lavender)'
+success_symbol = "[ ](bold fg:green)"
+error_symbol = "[ ](bold fg:red)"
+vimcmd_symbol = "[ ](bold fg:green)"
+vimcmd_replace_one_symbol = "[ ](bold fg:lavender)"
+vimcmd_replace_symbol = "[ ](bold fg:lavender)"
+vimcmd_visual_symbol = "[ ](bold fg:lavender)"
