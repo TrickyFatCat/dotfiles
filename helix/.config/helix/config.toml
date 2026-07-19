@@ -1,6 +1,7 @@
 theme = "catppuccin_mocha"
 
 [editor]
+shell = ["nu", "-c"]
 line-number = "relative"
 mouse = true
 bufferline = "multiple"
