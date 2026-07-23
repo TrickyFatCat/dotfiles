@@ -29,6 +29,12 @@ name = "json"
 formatter = { command = "dprint", args = ["fmt", "--stdin", "json"] }
 auto-format = true
 
+# Nushell
+[[language]]
+name = "nu"
+formatter = { command = "nufmt", args = ["--stdin"] }
+auto-format = true
+
 # ====================== #
 #    LANGUAGE SERVERS    #
 # ====================== #
