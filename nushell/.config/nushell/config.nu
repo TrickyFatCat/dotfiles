@@ -59,6 +59,8 @@ fzf-utils-setup
 use completers.nu *
 init-completers
 
+use utils.nu *
+
 # ----------------------------- #
 #            Aliases            #
 # ----------------------------- #
