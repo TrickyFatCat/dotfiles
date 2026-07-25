@@ -6,21 +6,25 @@ export def --env fzf-utils-setup [] {
     $env.FZF_DEFAULT_COMMAND = "fd --hidden --strip-cwd-prefix --exclude .git"
     $env.FZF_CTRL_T_COMMAND = $env.FZF_DEFAULT_COMMAND
     $env.FZF_ALT_C_COMMAND = "fd --type=d --hidden --strip-cwd-prefix --exclude .git"
-    $env.FZF_CTRL_T_OPTS = "--height 40% --layout reverse --border --preview "preview-nu""
+    $env.FZF_CTRL_T_OPTS = "--height 40% --layout reverse --border --preview 'fzf-preview.nu {}'"
     $env.FZF_CTRL_R_OPTS = "--height 40% --layout reverse --border"
-}
-
-def preview-nu [path: string] {
-    if ($path | path type) == "dir" {
-        eza --tree --color=always $path | head -n 200
-    } else {
-        bat -n --color=always --line-range :500 $path
-    }
 }
 
 # Native Nushell list
 export def fzf-preview-options [] {
     return ($env.FZF_CTRL_T_OPTS | split row " ")
+}
+
+def fzf-cd-preview [] {
+    [
+        --height
+        40%
+        --layout
+        reverse
+        --border
+        --preview
+        'eza --tree --color=always {} | head -200'
+    ]
 }
 
 # Fuzzy-cd across the whole system
@@ -29,7 +33,7 @@ export def --env cda [] {
         zoxide query -l
         | lines
         | str join "\n"
-        | fzf --preview 'eza --tree --color=always {} | head -200'
+        | fzf ...(fzf-cd-preview)
     )
     if ($dir | is-not-empty) {
         cd $dir
@@ -40,7 +44,7 @@ export def --env cda [] {
 export def --env cdl [] {
     let dir = (
         ^fd --type=d --hidden --strip-cwd-prefix --exclude .git
-        | fzf --preview 'eza --tree --color=always {} | head -200'
+        | fzf ...(fzf-cd-preview)
     )
     if ($dir | is-not-empty) {
         cd $dir

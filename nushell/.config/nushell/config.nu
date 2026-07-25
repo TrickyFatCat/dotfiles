@@ -28,6 +28,7 @@ $env.config.buffer_editor = 'hx'
 use std/util "path add"
 
 path add "~/.local/bin/"
+path add ($nu.default-config-dir | path join "scripts")
 
 # ----------------------------- #
 #            Plugins            #
