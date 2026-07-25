@@ -55,6 +55,9 @@ $env.NU_LIB_DIRS = [
 use fzf-utils.nu *
 fzf-utils-setup
 
+use completers.nu *
+init-completers
+
 # ----------------------------- #
 #            Aliases            #
 # ----------------------------- #
