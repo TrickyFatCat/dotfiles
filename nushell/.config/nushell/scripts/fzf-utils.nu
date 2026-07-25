@@ -12,7 +12,15 @@ export def --env fzf-utils-setup [] {
 
 # Native Nushell list
 export def fzf-preview-options [] {
-    return ($env.FZF_CTRL_T_OPTS | split row " ")
+    [
+        --height
+        40%
+        --layout
+        reverse
+        --border
+        --preview
+        'fzf-preview.nu {}'
+    ]
 }
 
 def fzf-cd-preview [] {
