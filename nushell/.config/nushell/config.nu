@@ -57,7 +57,7 @@ use fzf-utils.nu *
 fzf-utils-setup
 
 use completers.nu *
-init-completers
+register-completers 
 
 use utils.nu *
 

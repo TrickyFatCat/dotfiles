@@ -1,20 +1,6 @@
 # Setup of external completers
 
-export def --env init-completers [] {
-    init-carapace
-    register-completers
-}
-
-# carapace
-def --env init-carapace [] {
-    $env.CARAPACE_BRIDGES = 'zsh,fish,bash,inshellisense' # optional
-
-    mkdir $"($nu.cache-dir)"
-    carapace _carapace nushell | save --force $"($nu.cache-dir)/carapace.nu"
-    source $"($nu.cache-dir)/carapace.nu"
-}
-
-def --env register-completers [] {
+export def --env register-completers [] {
     let carapace_completer = {|spans|
         carapace $spans.0 nushell ...$spans | from json
     }
@@ -55,7 +41,7 @@ def --env register-completers [] {
             git => $fish_completer
             # carapace doesn't have completions for asdf
             asdf => $fish_completer
-            _ => $carapace_completer
+            _ => $fish_completer
         } | do $in $spans
     }
 
