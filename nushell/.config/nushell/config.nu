@@ -70,6 +70,10 @@ use utils.nu *
 alias core-ls = ls
 alias ls = ls -a
 
+# Swap cat and bat
+alias core-cat = cat
+alias cat = bat
+
 # Quick exit
 alias q = exit
 
