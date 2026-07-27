@@ -58,13 +58,17 @@ use fzf-utils.nu *
 fzf-utils-setup
 
 use completers.nu *
-register-completers 
+register-completers
 
 use utils.nu *
 
 # ----------------------------- #
 #            Aliases            #
 # ----------------------------- #
+
+# Show hidden files
+alias core-ls = ls
+alias ls = ls -a
 
 # Quick exit
 alias q = exit
