@@ -1,0 +1,20 @@
+[metadata]
+name = "text-files"
+description = "List of text files"
+requirements = ["fd", "bat"]
+
+[source]
+command = ["fd -t f -0 | xargs -0 file --mime-type | grep 'text/' | cut -d: -f1"]
+
+[preview]
+command = "bat -n --color=always '{}'"
+env = { BAT_THEME = "ansi" }
+
+[keybindings]
+enter = "actions:edit"
+
+[actions.edit]
+description = "Open the selected file in editor"
+command = "${EDITOR:-vim} {}"
+shell = "bash"
+mode = "execute"
