@@ -120,3 +120,6 @@ fzf --nushell | save -f ($nu.default-config-dir | path join "autoload" "_fzf_int
 (open ~/.config/nushell/autoload/_fzf_integration.nu
 | str replace --all 'str downcase' 'str lowercase'
 | save -f ~/.config/nushell/autoload/_fzf_integration.nu)
+
+# Television
+tv init nu | save -f ($nu.default-config-dir | path join "autoload/tv.nu")
