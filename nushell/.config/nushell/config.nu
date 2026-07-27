@@ -54,9 +54,6 @@ $env.NU_LIB_DIRS = [
     ($nu.default-config-dir | path join "scripts")
 ]
 
-use fzf-utils.nu *
-fzf-utils-setup
-
 use completers.nu *
 register-completers
 
