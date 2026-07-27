@@ -41,6 +41,4 @@ eval "$(starship init bash)"
 eval "$(zoxide init bash)"
 
 # Television
-
-echo 'eval "$(tv init bash)"' >> ~/.bashrc
 eval "$(tv init bash)"
