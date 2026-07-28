@@ -4,7 +4,7 @@ description = "List of text files"
 requirements = ["fd", "bat"]
 
 [source]
-command = ["fd -t f -0 | xargs -0 file --mime-type | grep 'text/' | cut -d: -f1"]
+command = ["fd -H -E .git -t f -0 | xargs -0 file --mime-type | grep 'text/' | cut -d: -f1"]
 
 [preview]
 command = "bat -n --color=always '{}'"
