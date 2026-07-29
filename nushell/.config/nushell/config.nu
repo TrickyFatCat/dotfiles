@@ -68,6 +68,10 @@ use utils.nu *
 alias core-ls = ls
 alias ls = ls -a
 
+# Install/Remove
+alias install = sudo pacman -S
+alias remove = sudo pacman -Runs
+
 # Swap cat and bat
 alias core-cat = cat
 alias cat = bat
