@@ -18,6 +18,9 @@ export PATH="$HOME/.cargo/bin:$PATH"
 alias q='exit'
 alias c='clear'
 
+alias install='sudo pacman -S'
+alias remove='sudo pacman -Runs'
+
 alias grep='grep --color=auto'
 
 alias lg='lazygit'
