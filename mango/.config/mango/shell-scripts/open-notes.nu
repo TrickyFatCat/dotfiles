@@ -14,7 +14,7 @@ if not $obsidian_running {
 let watchdog_running = (^pgrep -f $WATCHDOG_MARKER | complete | get exit_code) == 0
 if not $watchdog_running {
     job spawn {
-        bash -c $": ($WATCHDOG_MARKER); tail --pid=($nu.pid) -f /dev/null 2>/dev/null; pkill -f '/usr/bin/ob'"
+        bash -c $"setsid bash -c ': ($WATCHDOG_MARKER); tail --pid=($nu.pid) -f /dev/null 2>/dev/null; pkill -f \"/usr/bin/ob\"' < /dev/null > /dev/null 2>&1 &"
     }
 }
 
