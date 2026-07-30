@@ -18,6 +18,8 @@ export PATH="$HOME/.cargo/bin:$PATH"
 alias q='exit'
 alias c='clear'
 
+alias clip='wl-copy'
+
 alias install='sudo pacman -S'
 alias remove='sudo pacman -Runs'
 
@@ -35,7 +37,14 @@ alias cat='bat'
 alias cd='z'
 alias cdi='zi'
 
-alias y='yazi'
+# Cd cwd on exit yazi
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	command yazi "$@" --cwd-file="$tmp"
+	IFS= read -r -d '' cwd < "$tmp"
+	[ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
+	command rm -f -- "$tmp"
+}
 
 # Starship Prompt
 eval "$(starship init bash)"
