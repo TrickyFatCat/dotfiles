@@ -72,8 +72,9 @@ use utils.nu *
 alias core-ls = ls
 alias ls = ls -a
 
-# Clipping output
-alias clip = wl-copy
+# Copy/Paste
+alias copy = wl-copy
+alias paste = wl-paste
 
 # Install/Remove
 alias install = sudo pacman -S
