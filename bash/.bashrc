@@ -18,7 +18,8 @@ export PATH="$HOME/.cargo/bin:$PATH"
 alias q='exit'
 alias c='clear'
 
-alias clip='wl-copy'
+alias copy='wl-copy'
+alias paste='wl-paste'
 
 alias install='sudo pacman -S'
 alias remove='sudo pacman -Runs'
