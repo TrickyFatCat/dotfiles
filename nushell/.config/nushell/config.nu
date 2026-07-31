@@ -18,9 +18,13 @@
 #     config nu --doc | nu-highlight | less -R
 
 # ----------------------------- #
-# Set Helix as a default editor #
+#           Defaults            #
 # ----------------------------- #
+# Default buffer editor
 $env.config.buffer_editor = 'hx'
+
+# Disable welcome
+$env.config.show_banner = false
 
 # ----------------------------- #
 #             PATH              #
