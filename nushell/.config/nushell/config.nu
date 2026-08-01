@@ -48,6 +48,7 @@ const NU_PLUGIN_DIRS = [
 #           Variables           #
 # ----------------------------- #
 $env.EDITOR = "hx"
+$env.TERMINAL = "kitty"
 
 # ----------------------------- #
 #            Modules            #
@@ -63,6 +64,7 @@ use completers.nu *
 register-completers
 
 use utils.nu *
+use detect-terminal.nu *
 
 # ----------------------------- #
 #            Aliases            #
