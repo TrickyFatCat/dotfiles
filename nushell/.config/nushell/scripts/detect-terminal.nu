@@ -62,8 +62,16 @@ export def expand-tilde [p: string] {
 # foreground app has overwritten the title with something else).
 export def title-cwd [title: string] {
     let t = $title | str trim
-    if ($t | str starts-with "/") or ($t | str starts-with "~") {
-        let expanded = (expand-tilde $t)
+    # Common prompt-title convention: "user@host:/some/path" (the default
+    # \u@\h:\w PS1 exported to the window title). Take everything after
+    # the last colon before checking whether it looks like a path.
+    let candidate = if ($t | str contains ":") {
+        $t | split row ":" | last
+    } else {
+        $t
+    }
+    if ($candidate | str starts-with "/") or ($candidate | str starts-with "~") {
+        let expanded = (expand-tilde $candidate)
         if ($expanded | path exists) {
             return $expanded
         }
