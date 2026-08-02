@@ -1,21 +1,50 @@
-#!/usr/bin/env nu
+#!/usr/bin/env -S nu --config ~/.config/nushell/config.nu
 
 const WATCHDOG_MARKER = "notes-scratchpad-watchdog"
+const TITLE = "Notes"
+const NOTES_DIR = "~/Documents/Notes"
+const CONFIG_FILE = "~/.config/kitty/kitty-no-tabs.conf"
 
-# Spawn ob only if it isn't already running
-let obsidian_running = (^pgrep -f "/usr/bin/ob" | complete | get exit_code) == 0
-if not $obsidian_running {
-    job spawn {
-        bash -c "ob sync --path ~/Documents/Notes --continuous > /tmp/ob.log 2>&1"
+# Called twice: once by mango (no --inner) to pick a terminal and spawn it,
+# then again by that terminal itself (with --inner) to do the actual work.
+def --env main [--inner] {
+    if not $inner {
+        let term = (env-or "TERMINAL" "kitty")
+
+        # Config is valid if only kitty terminal is used
+        let config = if $term == "kitty" {
+            $CONFIG_FILE | path expand -s
+        } else {
+            null
+        }
+
+        let self_path = $env.CURRENT_FILE | path expand
+
+        # NOT detached: this process must stay alive and match what mango
+        # spawned, so toggle_named_scratchpad tracking keeps working.
+        open-terminal $term --title=$TITLE --config=$config --command=$self_path --args=["--inner"]
+        return
     }
-}
 
-# Spawn the cleanup watchdog only if one isn't already running
-let watchdog_running = (^pgrep -f $WATCHDOG_MARKER | complete | get exit_code) == 0
-if not $watchdog_running {
-    job spawn {
-        bash -c $"setsid bash -c ': ($WATCHDOG_MARKER); tail --pid=($nu.pid) -f /dev/null 2>/dev/null; pkill -f \"/usr/bin/ob\"' < /dev/null > /dev/null 2>&1 &"
+    let editor = (env-or "EDITOR" "hx")
+    let notes_path = $NOTES_DIR | path expand -s
+
+    # Spawn ob only if it isn't already running
+    # let obsidian_running = (^pgrep -f "/usr/bin/ob" | complete | get exit_code) == 0
+    let obsidian_running = ps | any {|p| $p.name == "ob"}
+    if not $obsidian_running {
+        job spawn {
+            bash -c $"ob sync --path '($notes_path)' --continuous > /tmp/ob.log 2>&1"
+        }
     }
-}
 
-hx ~/Documents/Notes/
+    # Spawn the cleanup watchdog only if one isn't already running
+    let watchdog_running = (^pgrep -f $WATCHDOG_MARKER | complete | get exit_code) == 0
+    if not $watchdog_running {
+        job spawn {
+            bash -c $"setsid bash -c ': ($WATCHDOG_MARKER); tail --pid=($nu.pid) -f /dev/null 2>/dev/null; pkill -f \"/usr/bin/ob\"' < /dev/null > /dev/null 2>&1 &"
+        }
+    }
+
+    ^$editor $notes_path
+}
