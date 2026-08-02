@@ -1,3 +1,9 @@
+# Use to choose between env variable or a fallback option
+# For example let term = (env-or "TERMINAL" "kitty")
+export def --env env-or [name: string, fallback: string] {
+    $env | get -o $name | default $fallback
+}
+
 # A function which allows to add a PATH to .bashrc from Nushell
 # You can specify your path
 # Or you can pipe it like pwd | add-to-bashrc-path
