@@ -59,11 +59,10 @@ def --env main [] {
     let known_terminals = registry | get name
     let target = (resolve-target $known_terminals $default_terminal)
     let class = $target.cwd | path basename
-    let dir = $target.cwd
-    let title = if ($dir | str starts-with $env.HOME) {
-        "~" + ($dir | str substring ($env.HOME | str length)..)
+    let title = if ($target.cwd | str starts-with $env.HOME) {
+        "~" + ($target.cwd | str substring ($env.HOME | str length)..)
     } else {
-        $dir
+        $target.cwd
     }
     open-terminal $target.terminal --title=$title --dir=$target.cwd --detached --command=$editor --args=["."]
 }

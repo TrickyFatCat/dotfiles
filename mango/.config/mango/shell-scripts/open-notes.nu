@@ -3,21 +3,13 @@
 const WATCHDOG_MARKER = "notes-scratchpad-watchdog"
 const TITLE = "Notes"
 const NOTES_DIR = "~/Documents/Notes"
-const CONFIG_FILE = "~/.config/kitty/kitty-no-tabs.conf"
 
 # Called twice: once by mango (no --inner) to pick a terminal and spawn it,
 # then again by that terminal itself (with --inner) to do the actual work.
 def --env main [--inner] {
     if not $inner {
         let term = (env-or "TERMINAL" "kitty")
-
-        # Config is valid if only kitty terminal is used
-        let config = if $term == "kitty" {
-            $CONFIG_FILE | path expand -s
-        } else {
-            null
-        }
-
+        let config = get-kitty-alt-config
         let self_path = $env.CURRENT_FILE | path expand
 
         # NOT detached: this process must stay alive and match what mango
