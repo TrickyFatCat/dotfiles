@@ -2,7 +2,7 @@
 # and process-tree walking. No knowledge of any specific WM or compositor —
 # callers supply the pid to start from (e.g. via their WM's IPC tool).
 
-export def proc-name [pid: int] {
+export def process-name [pid: int] {
     let row = ps | where pid == $pid
     if ($row | is-empty) {
         ""
