@@ -59,6 +59,7 @@ $env.NU_LIB_DIRS = [
     ($nu.default-config-dir | path join "scripts")
 ]
 
+use terminal-registry.nu *
 use tv-utils.nu *
 use completers.nu *
 register-completers
