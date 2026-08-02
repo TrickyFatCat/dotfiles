@@ -1,5 +1,5 @@
-#!/usr/bin/env nu
-#
+#!/usr/bin/env -S nu --config ~/.config/nushell/config.nu
+
 # Porting to another WM: everything below is MangoWM-specific (it only
 # knows about `mmsg`). terminal-detect.nu has no WM knowledge at all —
 # to port, replace `get-focused-client` with an equivalent for your WM's
@@ -10,7 +10,6 @@ def env-or [name: string, fallback: string] {
 
 let default_terminal = (env-or "TERMINAL" "kitty")
 let editor = (env-or "EDITOR" "hx")
-let editor_arg = (".")
 
 # ---------------------------------------------------------------------------
 # Focused-client detection via mmsg (MangoWM's IPC tool)
@@ -32,10 +31,8 @@ def get-focused-client [] {
     }
 }
 
-# Returns a record { terminal: string, cwd: string }
-# `terminal` is always `default_terminal` — this function only ever tries
-# to find a good `cwd` to open it at. Detection (mmsg/process tree) is
-# used purely to locate the cwd, never to pick which terminal to launch.
+# Returns a record { terminal: string, cwd: string }. `terminal` is always
+# `default_terminal` — detection is used only to locate a good `cwd`.
 def resolve-target [known_terminals: list<string>, default_terminal: string] {
     let client = (get-focused-client)
     if $client == null {
@@ -52,9 +49,8 @@ def resolve-target [known_terminals: list<string>, default_terminal: string] {
         return {terminal: $default_terminal, cwd: $env.HOME}
     }
 
-    # Prefer the window title as the cwd source: it comes straight from
-    # the compositor, requires no extra config, and sidesteps every
-    # process-tree/multi-instance issue entirely.
+    # Prefer the window title as the cwd source: comes straight from the
+    # compositor, no extra config, sidesteps process-tree/multi-instance issues.
     let title = $client.title? | default ""
     let from_title = (title-cwd $title)
     if $from_title != null {
@@ -67,12 +63,15 @@ def resolve-target [known_terminals: list<string>, default_terminal: string] {
     {terminal: $default_terminal, cwd: $cwd}
 }
 
-def spawn-editor [registry: table, cwd: string, default_terminal: string] {
-    let chosen = $registry | where name == $default_terminal | get 0
-    do $chosen.spawn $cwd
+def --env main [] {
+    let known_terminals = registry | get name
+    let target = (resolve-target $known_terminals $default_terminal)
+    let class = $target.cwd | path basename
+    let dir = $target.cwd
+    let title = if ($dir | str starts-with $env.HOME) {
+        "~" + ($dir | str substring ($env.HOME | str length)..)
+    } else {
+        $dir
+    }
+    open-terminal $target.terminal --title=$title --dir=$target.cwd --detached --command=$editor --args=["."]
 }
-
-let registry = (terminal-registry $editor $editor_arg)
-let known_terminals = $registry | get name
-let target = (resolve-target $known_terminals $default_terminal)
-spawn-editor $registry $target.cwd $default_terminal
