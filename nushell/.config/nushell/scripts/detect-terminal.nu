@@ -1,41 +1,6 @@
-# Terminal registry: the ONE place that knows about supported terminals.
-# Add a new terminal by adding a row here — nothing else needs to change.
-export def terminal-registry [editor: string, editor_arg: string] {
-    [
-        {
-            name: "kitty"
-            spawn: {|cwd| ^kitty --directory $cwd -- $editor $editor_arg }
-        }
-        {
-            name: "foot"
-            spawn: {|cwd| ^foot -D $cwd $editor $editor_arg }
-        }
-        {
-            name: "footclient"
-            spawn: {|cwd| ^foot -D $cwd $editor $editor_arg }
-        }
-        {
-            name: "alacritty"
-            spawn: {|cwd| ^alacritty --working-directory $cwd -e $editor $editor_arg }
-        }
-        {
-            name: "wezterm"
-            spawn: {|cwd| ^wezterm start --cwd $cwd -- $editor $editor_arg }
-        }
-        {
-            name: "wezterm-gui"
-            spawn: {|cwd| ^wezterm start --cwd $cwd -- $editor $editor_arg }
-        }
-        {
-            name: "xterm"
-            spawn: {|cwd| ^xterm -e $"cd '($cwd)' && ($editor) ($editor_arg)" }
-        }
-        {
-            name: "ghostty"
-            spawn: {|cwd| ^ghostty $"--working-directory=($cwd)" -e $editor $editor_arg }
-        }
-    ]
-}
+# WM-agnostic detection helpers: process names, window-title cwd parsing,
+# and process-tree walking. No knowledge of any specific WM or compositor —
+# callers supply the pid to start from (e.g. via their WM's IPC tool).
 
 export def proc-name [pid: int] {
     let row = ps | where pid == $pid
@@ -57,13 +22,10 @@ export def expand-tilde [p: string] {
 
 # Some terminals (kitty with shell integration / OSC 7, or a prompt like
 # starship) put the current directory straight into the window title.
-# 
-# Returns null if the title doesn't look like a directory path (e.g. a
-# foreground app has overwritten the title with something else).
+# Returns null if the title doesn't look like a directory path.
 export def title-cwd [title: string] {
     let t = $title | str trim
-    # Common prompt-title convention: "user@host:/some/path" (the default
-    # \u@\h:\w PS1 exported to the window title). Take everything after
+    # Common convention: "user@host:/some/path" — take everything after
     # the last colon before checking whether it looks like a path.
     let candidate = if ($t | str contains ":") {
         $t | split row ":" | last
@@ -79,14 +41,10 @@ export def title-cwd [title: string] {
     null
 }
 
-# Walk down the process tree from the terminal's pid to find
-# the deepest running child — this is the shell (or whatever
-# foreground command) actually sitting in the terminal right now.
-#
-# Used only as a fallback when the window title doesn't yield a usable
-# cwd. Filters out kitty's "kitten __watch_conf__" config-watcher child,
-# which is forked early and would otherwise be mistaken for the real
-# foreground process.
+# Walk down the process tree from the terminal's pid to find the deepest
+# running child — the shell (or foreground command) sitting in it now.
+# Fallback only, used when the window title doesn't yield a usable cwd.
+# Filters out kitty's "kitten __watch_conf__" config-watcher child.
 export def find-fg-pid [start_pid: int] {
     mut current = $start_pid
     mut seen = [$start_pid]
