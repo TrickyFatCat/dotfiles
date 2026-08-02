@@ -36,7 +36,7 @@ def resolve-target [known_terminals: list<string>, default_terminal: string] {
         return {terminal: $default_terminal, cwd: $env.HOME}
     }
 
-    let name = (proc-name $pid)
+    let name = (process-name $pid)
     if not ($name in $known_terminals) {
         return {terminal: $default_terminal, cwd: $env.HOME}
     }
