@@ -50,6 +50,7 @@ const NU_PLUGIN_DIRS = [
 $env.EDITOR = "hx"
 $env.TERMINAL = "kitty"
 $env.KITTY_ALT_CONFIG = "~/.config/kitty/kitty-no-tabs.conf" | path expand -s
+$env.FILE_MANAGER = "yazi"
 
 # ----------------------------- #
 #            Modules            #
