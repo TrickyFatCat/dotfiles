@@ -65,6 +65,7 @@ register-completers
 
 use utils.nu *
 use terminal-registry.nu *
+use detect-terminal.nu *
 use completers.nu *
 register-completers
 
