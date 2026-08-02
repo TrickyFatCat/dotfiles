@@ -8,18 +8,17 @@ export def --env env-or [name: string, fallback: string] {
 
 # Checks if current terminal is kitty
 export def --env is-kitty-terminal [] {
-    let terminal = (env-or "TERMINAL" "kitty")
-    return ($terminal == "kitty")
+    (env-or "TERMINAL" "kitty") == "kitty"
 }
 
 # Returns $env.KITTY_ALT_CONFIG if possible
 # Does NOT validate kitty config
 export def --env get-kitty-alt-config [] {
-    if (is-kitty-terminal) {
-        return (env-or "KITTY_ALT_CONFIG" "null")
-    } else {
-        return "null"
+    if not (is-kitty-terminal) {
+        return null
     }
+
+    $env | get -o KITTY_ALT_CONFIG
 }
 
 # Walk up from a pid to the nearest ancestor whose name is in `names`.
