@@ -13,5 +13,5 @@ def --env main [] {
         null
     }
 
-    open-terminal --class=$CLASS
+    open-terminal --class=$CLASS --config=$config
 }
