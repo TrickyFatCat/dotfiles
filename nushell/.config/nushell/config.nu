@@ -49,6 +49,7 @@ const NU_PLUGIN_DIRS = [
 # ----------------------------- #
 $env.EDITOR = "hx"
 $env.TERMINAL = "kitty"
+$env.KITTY_ALT_CONFIG = "~/.config/kitty/kitty-no-tabs.conf" | path expand -s
 
 # ----------------------------- #
 #            Modules            #
@@ -59,13 +60,15 @@ $env.NU_LIB_DIRS = [
     ($nu.default-config-dir | path join "scripts")
 ]
 
-use terminal-registry.nu *
-use tv-utils.nu *
 use completers.nu *
 register-completers
 
 use utils.nu *
-use detect-terminal.nu *
+use terminal-registry.nu *
+use completers.nu *
+register-completers
+
+use tv-utils.nu *
 
 # ----------------------------- #
 #            Aliases            #

@@ -1,7 +1,63 @@
+use terminal-registry.nu registry
+
 # Use to choose between env variable or a fallback option
 # For example let term = (env-or "TERMINAL" "kitty")
 export def --env env-or [name: string, fallback: string] {
     $env | get -o $name | default $fallback
+}
+
+# Checks if current terminal is kitty
+export def --env is-kitty-terminal [] {
+    let terminal = (env-or "TERMINAL" "kitty")
+    return ($terminal == "kitty")
+}
+
+# Returns $env.KITTY_ALT_CONFIG if possible
+# Does NOT validate kitty config
+export def --env get-kitty-alt-config [] {
+    if (is-kitty-terminal) {
+        return (env-or "KITTY_ALT_CONFIG" "null")
+    } else {
+        return "null"
+    }
+}
+
+# Walk up from a pid to the nearest ancestor whose name is in `names`.
+# Matches by name, not a fixed hop count, so it still works when a process
+# adds extra hops in between (wrappers, shells, a config-watcher child, etc).
+# Returns the matching pid, or null if none found before hitting pid 1.
+#
+# Good for: finding "which terminal is hosting this session" so you can
+# close it after spawning a replacement; finding an enclosing ssh/tmux/
+# systemd-run session to signal; any case where you know the process
+# you're after by name, but not how many layers of wrapping sit between
+# it and where your script is currently running.
+# 
+# Examples:
+#   find-ancestor-by-name $nu.pid ["kitty" "alacritty" "wezterm"]
+#   find-ancestor-by-name $nu.pid ["sshd"]   # find the ssh session process
+export def find-ancestor-by-name [start_pid: int, names: list<string>] {
+    mut current = $start_pid
+    mut seen = []
+    loop {
+        if $current == 1 or $current in $seen {
+            return null
+        }
+        $seen = ($seen | append $current)
+        let row = ps | where pid == $current
+        if ($row | is-empty) {
+            return null
+        }
+        let name = $row | get name | first
+        if $name in $names {
+            return $current
+        }
+        $current = ($row | get ppid | first)
+    }
+}
+
+export def find-ancestor-terminal [] {
+    find-ancestor-by-name $nu.pid (registry | get name)
 }
 
 # A function which allows to add a PATH to .bashrc from Nushell

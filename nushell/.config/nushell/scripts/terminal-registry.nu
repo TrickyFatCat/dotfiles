@@ -143,33 +143,6 @@ export def build-args [
     do ($matches | get 0 | get args_for) $opts
 }
 
-# Walks up from the current process to find the nearest ancestor whose
-# name matches a registered terminal. Matches by name rather than a fixed
-# hop count, so it stays correct even when a terminal inserts extra helper
-# processes (e.g. kitty's "kitten __watch_conf__" config watcher).
-#
-# Returns the ancestor's pid, or null if none found.
-export def find-ancestor-terminal [] {
-    let names = registry | get name
-    mut current = $nu.pid
-    mut seen = []
-    loop {
-        if $current == 1 or $current in $seen {
-            return null
-        }
-        $seen = ($seen | append $current)
-        let row = ps | where pid == $current
-        if ($row | is-empty) {
-            return null
-        }
-        let name = $row | get name | first
-        if $name in $names {
-            return $current
-        }
-        $current = ($row | get ppid | first)
-    }
-}
-
 # Spawn a terminal window from the registry.
 #   term_name : e.g. "kitty", "alacritty", "wezterm" — defaults to $env.TERMINAL
 #   --class   : window class / app-id (dotted GTK-style, e.g. "project.chooser")
