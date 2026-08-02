@@ -1,13 +1,5 @@
 #!/usr/bin/env -S nu --config ~/.config/nushell/config.nu
 
-# Porting to another WM: everything below is MangoWM-specific (it only
-# knows about `mmsg`). terminal-detect.nu has no WM knowledge at all —
-# to port, replace `get-focused-client` with an equivalent for your WM's
-# IPC (e.g. swaymsg/hyprctl/i3-msg) and leave the module untouched.
-def env-or [name: string, fallback: string] {
-    $env | get -o $name | default $fallback
-}
-
 let default_terminal = (env-or "TERMINAL" "kitty")
 let editor = (env-or "EDITOR" "hx")
 
