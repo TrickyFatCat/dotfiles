@@ -33,6 +33,7 @@ q = "quit"
 enter = "actions:edit"
 ctrl-e = "actions:explore"
 ctrl-c = "actions:cd"
+ctrl-g = "actions:git"
 
 [actions.explore]
 description = "Open repository in a new terminal window with file manager runnign. Shell must have FILE_MANAGER variable"
@@ -49,5 +50,11 @@ mode = "fork"
 [actions.edit]
 description = "Open repository in an editor in new terminal window."
 command = "~/.config/television/shell-scripts/open-editor.nu {}"
+shell = "nu"
+mode = "fork"
+
+[actions.git]
+description = "Open repository in new terminal window wiht running git client."
+command = "~/.config/television/shell-scripts/open-git.nu {}"
 shell = "nu"
 mode = "fork"
