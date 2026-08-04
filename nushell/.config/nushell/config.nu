@@ -70,6 +70,7 @@ use detect-terminal.nu *
 use completers.nu *
 register-completers
 
+use mango-utils.nu *
 use tv-utils.nu *
 
 # ----------------------------- #
