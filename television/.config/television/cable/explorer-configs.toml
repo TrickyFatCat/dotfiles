@@ -1,28 +1,31 @@
 [metadata]
-name = "git-projects"
-requirements = ["fd", "eza"]
+name = "explorer-configs"
+requirements = ["nu", "eza"]
 description = """
-A channel to select from git repositories on your local machine as a project.
+A channel to select packages in ~/.dotfiles to work with.
 
 This channel uses
-1. `fd` to find directories that contain a `.git` subdirectory.
+1. `nushell` to show directories in dotfile packages
 2. `eza` to preview directory structure.
+
 """
 
 [source]
-# this is a macos version of the command. While perfectly usable on linux, you may want to tweak it a bit.
-command = "fd -g .git -HL -t d -d 10 --prune ~ -E .cache -E .cargo -E .repos -E 'Library' -E 'Application Support' --exec dirname '{}'"
+# Saved just in case
+# command = '''fd -H -p -t d '\.config/[^/]+$' ~/dotfiles | lines | str trim -c '/' -r | uniq | sort | str join "\n"'''
+command = '''glob ~/dotfiles/*/.config/* | where ($it | path type) == dir | where ($it | path basename) == ($it | path dirname | path dirname | path basename) | sort | str join "\n"'''
 display = "{split:/:-1}"
+shell = "nu"
 
 [preview]
-command = "eza -a -T -L 3 --git-ignore --color always --icons always '{}'"
+command = "let p = '{}'; cd ($p | path dirname); eza -a -T -L 3 --git-ignore --color always --icons always ($p | path basename)"
 shell = "nu"
 
 [ui.remote_control]
 disabled = true
 
 [ui.preview_panel]
-size = 55
+size = 50
 
 [keybindings]
 tab = "select_next_entry"
@@ -33,7 +36,6 @@ q = "quit"
 enter = "actions:edit"
 ctrl-e = "actions:explore"
 ctrl-c = "actions:cd"
-ctrl-g = "actions:git"
 
 [actions.explore]
 description = "Open repository in a new terminal window with file manager runnign. Shell must have FILE_MANAGER variable"
@@ -50,11 +52,5 @@ mode = "fork"
 [actions.edit]
 description = "Open repository in an editor in new terminal window."
 command = "~/.config/television/shell-scripts/open-editor.nu {}"
-shell = "nu"
-mode = "fork"
-
-[actions.git]
-description = "Open repository in new terminal window wiht running git client."
-command = "~/.config/television/shell-scripts/open-git.nu {}"
 shell = "nu"
 mode = "fork"
