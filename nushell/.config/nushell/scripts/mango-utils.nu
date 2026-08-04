@@ -20,12 +20,9 @@ export def mwm-is-client-opened [appid: string, --title: string] {
     ((mwm-get-client-id $appid --title=$title) != null)
 }
 
-# Returns a list of clients field names
-export def mwm-get-clients-field-names [] {
-    mmsg get all-clients | from json | get clients | each { columns } | flatten | uniq
-}
-
 # Returns a table of currently running clients
+#
+# fields: a list of fields to show, use mwm-get-client-field-names to see options
 export def mwm-get-all-clients [fields?: list<string>] {
     let clients = mmsg get all-clients | from json | get clients
 
@@ -36,9 +33,17 @@ export def mwm-get-all-clients [fields?: list<string>] {
     $clients | select ...$fields
 }
 
-# Returns focused client details
-export def mwm-get-focusing-client [] {
-    mmsg get focusing-client | from json
+# Returns a current tag of a focused monitorm
+export def mwm-get-active-tag [] {
+    mmsg get all-tags
+    | from json
+    | get all_tags
+    | flatten tags
+    | flatten
+    | where is_active == true
+    | get index
+    | first
+    | into int
 }
 
 # Returns focusing client id
@@ -46,25 +51,14 @@ export def mwm-get-focusing-client-id [] {
     mwm-get-focusing-client | get id
 }
 
-# Returns a list of tags for a given monitor
-export def mwm-get-tags [monitor: string, --active-only] {
-    let monitor_data = mmsg get tags $monitor | from json
+#------------------------------------------
+# CLIENT MANIPULATION
+#------------------------------------------
 
-    if $active_only {
-        $monitor_data | get active_tags
-    }
-
-    $monitor_data | get tags
-}
-
-# Focus a client by a given appid and/or title
-export def mwm-focus-client [appid: string, --title: string, --FocusBack] {
-    let id = mwm-get-client-id $appid --title=$title
-
-    if $id == null {
-        return
-    }
-
+# Focus a client by a given id
+# 
+# --FocusBack: allows to focus last focusing client back
+export def mwm-focus-client [id: int, --FocusBack] {
     let focusing_id: int = mwm-get-focusing-client-id
 
     if $focusing_id == $id {
@@ -75,4 +69,66 @@ export def mwm-focus-client [appid: string, --title: string, --FocusBack] {
     }
     mmsg dispatch focusid client,($id)
     return
+}
+
+# Kill a client of a given id
+export def mwm-kill-client [id: int] {
+    mmsg dispatch killclient client,($id)
+    return
+}
+
+# Moves currently focused client to tag
+export def mwm-move-to-tag [tag: int] {
+    if (is-valid-tag $tag) {
+        return
+    }
+
+    mmsg dispatch tag ($tag)
+}
+
+# Moves client of a given id to a given tag
+export def mwm-move-client-to-tag [id: int, tag: int] {
+    if not (is-valid-tag $tag) {
+        return
+    }
+
+    mmsg dispatch tag,($tag) client,($id)
+}
+
+#------------------------------------------
+# UTILITY
+#------------------------------------------
+
+# Returns a list of tags for a given monitor
+#
+# --active: will return only active tags
+export def mwm-get-tags [monitor: string, --active] {
+    let monitor_data = mmsg get tags $monitor | from json
+
+    if $active {
+        $monitor_data | get active_tags
+        return
+    }
+
+    $monitor_data | get tags
+}
+
+# Returns a list of clients field names
+export def mwm-get-client-field-names [] {
+    mmsg get all-clients | from json | get clients | each { columns } | flatten | uniq
+}
+
+# Returns focused client details
+export def mwm-get-focusing-client [] {
+    mmsg get focusing-client | from json
+}
+
+# Checks if tag value is valid
+def is-valid-tag [tag: int] {
+    if ($tag <= 0) or ($tag > 9) {
+        # error make {msg: $"tag must be greater than 0 and less or equal 9, got ($tag)"}
+        print -e $"tag must be greater than 0 and less or equal 9, got ($tag)"
+        return false
+    }
+    return true
 }
