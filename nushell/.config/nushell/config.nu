@@ -51,6 +51,8 @@ $env.EDITOR = "hx"
 $env.TERMINAL = "kitty"
 $env.KITTY_ALT_CONFIG = "~/.config/kitty/kitty-no-tabs.conf" | path expand -s
 $env.FILE_MANAGER = "yazi"
+$env.GIT_TUI = "lazygit"
+$env.GIT_UI = null
 
 # ----------------------------- #
 #            Modules            #
