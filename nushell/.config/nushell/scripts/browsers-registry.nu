@@ -6,7 +6,7 @@ const BROWSER_REGISTRY = [
     {appid: "firefox", bin: "firefox", private_flag: "--private-window"}
     {appid: "librewolf", bin: "librewolf", private_flag: "--private-window"}
     {appid: "waterfox", bin: "waterfox", private_flag: "--private-window"}
-    {appid: "zen", bin: "zen", private_flag: "--private-window"}
+    {appid: "zen", bin: "zen-browser", private_flag: "--private-window"}
 ]
 
 # Look up a browser entry in the registry by matching the xdg desktop-file class
