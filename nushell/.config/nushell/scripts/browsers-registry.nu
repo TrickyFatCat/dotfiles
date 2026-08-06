@@ -39,13 +39,13 @@ export def open-browser [url: string, --private] {
 
     if ($browser | is-empty) {
         print -e $"Unknown default browser, falling back to xdg-open"
-        xdg-open $url
+        ^setsid -f xdg-open $url
         return
     }
 
     if not ($private) {
-        run-external $browser.bin $url
+        ^setsid -f $browser.bin $url
     } else {
-        run-external $browser.bin $browser.private_flag $url
+        setsid -f $browser.bin $browser.private_flag $url
     }
 }
