@@ -4,19 +4,21 @@
   they are not mapped in defsrc. This is so that certain actions can activate
   at the right time for certain input sequences. By default, unmapped keys are
   not processed through kanata due to a Windows issue related to AltGr. If you
-  use AltGr in yourkeyboar, you will likely want to follow the simple.kbd
+  use AltGr in your keyboard, you will likely want to follow the simple.kbd
   file while unmapping lctl and ralt from defsrc.
   |#
   process-unmapped-keys yes
 )
 
 (defvar
-      tap-time 200
-      hold-time 250
+  tap-time  200
+  hold-time 250
 )
 
 (defalias
-  ;; Home row modes
+  ;; ------------------------------------------------------------------
+  ;; Home row mods - "grl" (gralmak) alpha layout
+  ;; ------------------------------------------------------------------
   n (tap-hold $tap-time $hold-time n lmet)
   r (tap-hold $tap-time $hold-time r lalt)
   t (tap-hold $tap-time $hold-time t lctl)
@@ -26,7 +28,9 @@
   e (tap-hold $tap-time $hold-time e lalt)
   i (tap-hold $tap-time $hold-time i rmet)
 
-  ;; Home row modes qwrt
+  ;; ------------------------------------------------------------------
+  ;; Home row mods - "qwr" (qwerty) alpha layout
+  ;; ------------------------------------------------------------------
   am (tap-hold $tap-time $hold-time a lmet)
   sa (tap-hold $tap-time $hold-time s lalt)
   dc (tap-hold $tap-time $hold-time d lctl)
@@ -34,18 +38,23 @@
   js (tap-hold $tap-time $hold-time j rsft)
   kc (tap-hold $tap-time $hold-time k rctl)
   la (tap-hold $tap-time $hold-time l ralt)
-  ;m (tap-hold $tap-time $hold-time ; rmet)
+  scm (tap-hold $tap-time $hold-time ; rmet)
 
-  ;; Layer switching
+  ;; ------------------------------------------------------------------
+  ;; Layer switching / thumb keys
+  ;; ------------------------------------------------------------------
   grl (layer-switch grl)
   qwr (layer-switch qwr)
+  tab (tap-hold $tap-time $hold-time tab (layer-while-held mda))
   spc (tap-hold $tap-time $hold-time spc (layer-while-held sym))
   ret (tap-hold $tap-time $hold-time ret (layer-while-held num))
   del (tap-hold $tap-time $hold-time del (layer-while-held fun))
   esc (tap-hold $tap-time $hold-time esc (layer-while-held nav))
   grv (tap-hold $tap-time $hold-time grv (layer-while-held adj))
-  
+
+  ;; ------------------------------------------------------------------
   ;; Utils
+  ;; ------------------------------------------------------------------
   cpy C-S-c
   pst C-S-v
   cut C-S-x
@@ -63,29 +72,53 @@
   lctl lmet lalt           spc            ralt rctl
 )
 
+;; ======================================================================
+;; Base layers
+;; ======================================================================
+
 (deflayer grl
   grv  1    2    3    4    5    6    7    8    9    0    [    ]    bspc
   @grv  b    l    d    w    q    j    f    o    u    '    /    =    \
   bspc @n   @r   @t   @s   g    y    @h   @a   @e   @i   -    ret
   @cwt x    m    c    v    z    k    p    ,    .    ;    =
-  lctl tab @esc           @spc            @ret @del
+  lctl @tab @esc           @spc            @ret @del
 )
 
 (deflayer qwr
   grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
   @grv  q    w    e    r    t    y    u    i    o    p    [    ]    \
-  bspc @am  @sa  @dc  @fs    g    h  @js   @kc  @la    @;m    '    ret
+  bspc @am  @sa  @dc  @fs    g    h  @js   @kc  @la   @scm   '    ret
   @cwt z    x    c    v    b    n    m    ,    .    /    rsft
-  lctl tab @esc           @spc            @ret @del
+  lctl @tab @esc           @spc            @ret @del
 )
 
+;; ======================================================================
+;; Num layer - held via Enter (right thumb)
+;; ======================================================================
+
 (deflayer num
- grv  _    _    _    _    _    _    _    _    _    _    _    _    bspc
-  tab  S-1  S-2  S-3  S-4  S-5  S-6  S-7  S-8    S-9  S-0    .    _    _
-  bspc 1    2    3    4    5    6    7    8    9    0    ,    ret
-  lsft lmet lalt lctl lsft [    ]    rsft lctl lalt lmet rsft
-  lctl tab  esc             spc              -    -
+  grv  _    _    _    _    _    _    _    _    _    _    _    _    bspc
+  _    [    7    8    9    ]    _    _    _    _    _    _    _    _
+  bspc ;    4    5    6    =    _    lsft lctl lalt lmet _    ret
+  lsft grv  1    2    3    \    _    _    _    _    _    rsft
+  lctl -    .    0    ret  _
 )
+
+;; ======================================================================
+;; Media layer - held via Tab (left thumb)
+;; ======================================================================
+
+(deflayer mda
+  grv  _    _    _    _    _    _    _    _    _    _    _    _    bspc
+  tab  _    _    _    _    _    _    brdn bru  _    _    _    _    _
+  bspc lmet lalt lctl lsft _    _    prev vold volu next _    ret
+  lsft _    _    _    _    _    _    _    _    _    _    rsft
+  lctl tab  esc  spc  pp   mute
+)
+
+;; ======================================================================
+;; Function layer - held via Delete (right thumb)
+;; ======================================================================
 
 (deflayer fun
   grv  _    _    _    _    _    _    _    _    _    _    _    _    bspc
@@ -95,6 +128,10 @@
   lctl tab    esc             spc              -    -
 )
 
+;; ======================================================================
+;; Nav layer - held via Esc (left thumb)
+;; ======================================================================
+
 (deflayer nav
   grv  _    _    _    _    _    _    _    _    _    _    _    _    bspc
   tab  _    _    _    _    _    @red @pst @cpy @cut @und _    _    _
@@ -102,6 +139,10 @@
   lsft _    _    _    _    _    _    home pgdn pgup end  rsft
   lctl -    -           spc               ret  del
 )
+
+;; ======================================================================
+;; Sym layer - held via Space (left thumb)
+;; ======================================================================
 
 (deflayer sym
   grv  _     _    _    _    _    _    _    _    _    _    _   _    bspc
@@ -111,18 +152,14 @@
   lctl tab esc            -           -    -
 )
 
+;; ======================================================================
+;; Adjust layer - held via Grave
+;; ======================================================================
+
 (deflayer adj
   grv  _    _    _    _    _    _    _    _    _    _    _    _    bspc
   tab  _    _    _    _    _    _    _    _    _    _    _    _    _
   bspc _    _    @qwr @grl _    _    _    _    _    _    _    ret
-  lsft _    _    _    _    _    _    _    _    _    _    rsft
-  lctl lmet lalt           spc            ralt  rctl
-)
-
-(deflayer mda
-  grv  _    _    _    _    _    _    _    _    _    _    _    _    bspc
-  tab  _    _    _    _    _    _    _    _    _    _    _    _    _
-  bspc _    _    _    _    _    _    _    _    _    _    _    ret
   lsft _    _    _    _    _    _    _    _    _    _    rsft
   lctl lmet lalt           spc            ralt  rctl
 )
