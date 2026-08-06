@@ -9,5 +9,5 @@ def --env main [] {
         return
     }
 
-    ^Telegram
+    ^setsid -f Telegram
 }
