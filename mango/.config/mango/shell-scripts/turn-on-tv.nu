@@ -17,7 +17,7 @@ def --env main [
         let id = mwm-get-client-id $appid --title=$title
 
         if $focusing_id == $id {
-            mwm-kill-client $id
+            mwm-kill-client $id --force
             return
         }
 
@@ -26,9 +26,16 @@ def --env main [
         return
     }
 
+    # This config is only valid for kitty terminal
+    let config = if $appid == "kitty" {
+        $env | get -o "KITTY_ALT_CONFIG" | default null
+    } else {
+        null
+    }
+
     mut full_args = $args
     if $keybindings != null {
         $full_args = ($full_args | append $"--keybindings=($keybindings)")
     }
-    open-terminal --class=$appid --title=$title --detached --command=tv --args=$full_args
+    open-terminal --class=$appid --title=$title --config=$config --detached --command=tv --args=$full_args
 }
