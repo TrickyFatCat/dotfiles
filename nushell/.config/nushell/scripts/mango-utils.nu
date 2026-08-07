@@ -72,7 +72,10 @@ export def mwm-focus-client [id: int, --FocusBack] {
 }
 
 # Kill a client of a given id
-export def mwm-kill-client [id: int] {
+export def mwm-kill-client [id: int, --force] {
+    if $force {
+        mmsg dispatch killclient,force client,($id)
+    }
     mmsg dispatch killclient client,($id)
     return
 }
