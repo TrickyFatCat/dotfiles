@@ -35,6 +35,11 @@ name = "nu"
 formatter = { command = "nufmt", args = ["--stdin"] }
 auto-format = true
 
+# INI
+[[language]]
+name = "bash"
+file-types = ["conf"]
+
 # ====================== #
 #    LANGUAGE SERVERS    #
 # ====================== #
