@@ -2,7 +2,12 @@ use terminal-registry.nu registry
 
 # Use to choose between env variable or a fallback option
 # For example let term = (env-or "TERMINAL" "kitty")
-export def --env env-or [name: string, fallback: string] {
+export def --env env-or [name: string, fallback] {
+    let kind = $fallback | describe
+    if $kind != "string" and $kind != "nothing" {
+        error make {msg: $"fallback must be a string or null, got ($kind)"}
+    }
+
     $env | get -o $name | default $fallback
 }
 
