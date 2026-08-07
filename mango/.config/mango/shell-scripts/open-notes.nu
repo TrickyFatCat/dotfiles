@@ -38,5 +38,5 @@ def --env main [--inner] {
         }
     }
 
-    ^$editor $notes_path
+    ^setsid $editor $notes_path
 }
