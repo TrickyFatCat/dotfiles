@@ -1,4 +1,7 @@
 # Nushell
 history.txt
 nushell/.config/nushell/autoload
-mango/.config/mango/dms
+
+# Noctalia Related
+# Excluded as they automatically changes with themes
+mango/.config/mango/noctalia.conf
