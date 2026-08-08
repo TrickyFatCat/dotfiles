@@ -20,7 +20,7 @@ def main [...args: string] {
         } else {
             # nothing alive - clear any stale lock/state and open fresh, automatically
             rm -f /tmp/msnap-gui.lock /tmp/msnap-cast.pid /tmp/msnap-cast.filepath /tmp/msnap-cast.starttime
-            flock -n /tmp/msnap-gui.lock msnap gui
+            flock -n /tmp/msnap-gui.lock msnap ...$args
         }
     } else {
         ^setsid msnap ...$args
