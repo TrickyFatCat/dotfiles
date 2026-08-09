@@ -1,6 +1,6 @@
 #!/usr/bin/env -S nu --config ~/.config/nushell/config.nu 
 
-def --env main [url: string = "about:blank", --private] {
+def --env main [url?: string, --private] {
     let appid = get-browser-appid
 
     if (mwm-is-client-opened $appid) {
