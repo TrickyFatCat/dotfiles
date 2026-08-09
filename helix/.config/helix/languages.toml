@@ -40,6 +40,12 @@ auto-format = true
 name = "bash"
 file-types = ["conf"]
 
+# Lua
+[[language]]
+name = "lua"
+formatter = { command = "stylua", args = ["-"] }
+auto-format = true
+
 # ====================== #
 #    LANGUAGE SERVERS    #
 # ====================== #
