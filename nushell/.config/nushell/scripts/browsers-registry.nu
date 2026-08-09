@@ -34,18 +34,27 @@ export def get-browser-appid [] {
 }
 
 # Tries to open a default browser from xdg-settings with flags
-export def open-browser [url: string, --private] {
+export def open-browser [url?: string, --private] {
     let browser = get-browser
 
     if ($browser | is-empty) {
         print -e $"Unknown default browser, falling back to xdg-open"
-        ^setsid -f xdg-open $url
+        ^setsid -f xdg-open ($url | default "about:blank")
         return
     }
 
-    if not ($private) {
-        ^setsid -f $browser.bin $url
-    } else {
-        setsid -f $browser.bin $browser.private_flag $url
+    mut args = []
+    if $private {
+        if ($browser.private_flag? | is-empty) {
+            print -e $"($browser.bin) has no known private-browsing flag, opening normally"
+        } else {
+            $args = ($args | append $browser.private_flag)
+        }
     }
+
+    if $url != null {
+        $args = ($args | append $url)
+    }
+
+    ^setsid -f $browser.bin ...$args
 }
