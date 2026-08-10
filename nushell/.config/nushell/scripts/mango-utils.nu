@@ -136,8 +136,8 @@ def is-valid-tag [tag: int] {
     return true
 }
 
-# Verifies a given mango config
-export def mango-verify-config [config: string = "~/.config/mango/config.conf"] {
+# Validates a given mango config
+export def mwm-validate-config [config: string = "~/.config/mango/config.conf"] {
     let path = $config | path expand
 
     if not ($path | path exists) {
