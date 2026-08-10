@@ -17,10 +17,11 @@ def --env main [
         let id = mwm-get-client-id $appid --title=$title
 
         if $focusing_id == $id {
-            mwm-kill-client $id --force
+            mwm-kill-client $id
             return
         }
 
+        # TODO: Either make it optioanal or remove. Clients can be global.
         let tag = mwm-get-active-tag
         mwm-move-client-to-tag $id $tag
         return

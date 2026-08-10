@@ -10,10 +10,12 @@ def --env main [] {
         let id = mwm-get-client-id $appid --title=$TITLE
 
         if $focusing_id == $id {
-            mwm-kill-client $id --force
+            mwm-kill-client $id
             return
         }
 
+        # NOTE: At the moment system monitor isn't global.
+        # TODO: Might be a good option to check if it's global, in case if it was made one
         let tag = mwm-get-active-tag
         mwm-move-client-to-tag $id $tag
         return
