@@ -126,6 +126,11 @@ export def mwm-get-focusing-client [] {
     mmsg get focusing-client | from json
 }
 
+# Returns data about last opened surfaces
+export def mwm-get-last-open-surface [] {
+    mmsg get last_open_surface | from json
+}
+
 # Checks if tag value is valid
 def is-valid-tag [tag: int] {
     if ($tag <= 0) or ($tag > 9) {
