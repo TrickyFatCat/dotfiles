@@ -4,4 +4,5 @@ nushell/.config/nushell/autoload
 
 # Noctalia Related
 # Excluded as they automatically changes with themes
-mango/.config/mango/noctalia.conf
+/mango/.config/mango/noctalia.conf
+/foot/.config/foot/themes/noctalia
