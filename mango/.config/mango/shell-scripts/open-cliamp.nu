@@ -1,6 +1,6 @@
 #!/usr/bin/env -S nu --config ~/.config/nushell/config.nu
 
-const CLASS = "scratch.term"
+const CLASS = "scratch.music"
 
 def --env main [] {
     let term = (env-or "TERMINAL" "foot")
@@ -12,5 +12,5 @@ def --env main [] {
         null
     }
 
-    open-terminal --class=$CLASS --config=$config --detached
+    open-terminal --class=$CLASS --config=$config --detached --command="cliamp"
 }
