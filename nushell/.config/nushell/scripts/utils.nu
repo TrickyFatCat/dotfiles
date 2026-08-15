@@ -115,3 +115,13 @@ export def add-to-bashrc-path [dir?: string] {
         print $"(ansi green_bold)Added(ansi reset) to (ansi cyan)($bashrc)(ansi reset): (ansi light_gray)($line)(ansi reset)"
     }
 }
+
+# Makes given file executable
+# file: target file
+export def mkexec [file: string] {
+    if ($file | path type) != "file" {
+        error make ("Invalid file path.")
+    }
+
+    chmod +x $file
+}
