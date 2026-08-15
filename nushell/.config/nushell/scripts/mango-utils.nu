@@ -5,7 +5,7 @@ export def mwm-get-client-id [appid: string, --title: string] {
 
     let matches = (
         $clients
-        | where {|c| ($c.appid == $appid) and ($title == null or $c.title == $title) }
+        | where {|c| ($c.appid =~ $appid) and ($title == null or ($c.title =~ $title))}
     )
 
     if ($matches | is-empty) {
