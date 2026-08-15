@@ -1,26 +1,19 @@
 #!/usr/bin/env -S nu --config ~/.config/nushell/config.nu
 
-const TITLE = "File Manager"
+const CLASS = "file.manager"
 
 def --env main [dir?: string] {
-    let appid = env-or "TERMINAL" "foot"
+    let appid = (env-or "TERMINAL" "foot") | append $CLASS | str join "."
+
     let command = env-or "FILE_MANAGER_TUI" null
 
     if $command == null {
         return
     }
 
-    if (mwm-is-client-opened $appid --title=$TITLE) {
-        let focusing_id: int = mwm-get-focusing-client-id
-        let id = mwm-get-client-id $appid --title=$TITLE
-
-        if $focusing_id == $id {
-            mwm-kill-client $id
-            return
-        }
-
-        let tag = mwm-get-active-tag
-        mwm-move-client-to-tag $id $tag
+    if (mwm-is-client-opened $appid) {
+        let id = mwm-get-client-id $appid
+        mwm-focus-client $id --FocusBack
         return
     }
 
@@ -32,5 +25,5 @@ def --env main [dir?: string] {
         $env.HOME
     }
 
-    open-terminal --class=$appid --title=$TITLE --detached --command=$command --args=[$path]
+    open-terminal --class=$appid --detached --command=$command --args=[$path]
 }
