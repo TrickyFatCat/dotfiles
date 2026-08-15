@@ -2,7 +2,7 @@
 
 const TITLE = "System Monitor"
 def --env main [] {
-    let appid = env-or "TERMINAL" "kitty"
+    let appid = env-or "TERMINAL" "foot"
     let command = env-or "SYS_MONITOR_TUI" null
 
     if (mwm-is-client-opened $appid --title=$TITLE) {
