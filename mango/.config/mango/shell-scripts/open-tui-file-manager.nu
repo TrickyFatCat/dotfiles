@@ -2,11 +2,11 @@
 
 const TITLE = "File Manager"
 
-def --env main [] {
+def --env main [dir?: string] {
     let appid = env-or "TERMINAL" "foot"
     let command = env-or "FILE_MANAGER_TUI" null
 
-    if $command == 0 {
+    if $command == null {
         return
     }
 
@@ -24,5 +24,13 @@ def --env main [] {
         return
     }
 
-    open-terminal --class=$appid --title=$TITLE --detached --command=$command
+    let path = if $dir == null {
+        $env.HOME
+    } else if ($dir | path type) == "dir" {
+        $dir
+    } else {
+        $env.HOME
+    }
+
+    open-terminal --class=$appid --title=$TITLE --detached --command=$command --args=[$path]
 }
