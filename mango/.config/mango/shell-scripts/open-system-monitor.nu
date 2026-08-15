@@ -1,6 +1,7 @@
 #!/usr/bin/env -S nu --config ~/.config/nushell/config.nu
 
 const TITLE = "System Monitor"
+
 def --env main [] {
     let appid = env-or "TERMINAL" "foot"
     let command = env-or "SYS_MONITOR_TUI" null
@@ -21,5 +22,5 @@ def --env main [] {
         return
     }
 
-    open-terminal --class=$appid --title=$TITLE --detached --command=$command
+    open-terminal --title=$TITLE --detached --command=$command
 }
