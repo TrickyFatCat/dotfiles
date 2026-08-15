@@ -52,7 +52,7 @@ const NU_PLUGIN_DIRS = [
 # ----------------------------- #
 $env.EDITOR = "hx"
 $env.TERMINAL = "foot"
-$env.FILE_MANAGER = "yazi"
+$env.FILE_MANAGER_TUI = "yazi"
 $env.GIT_TUI = "lazygit"
 $env.GIT_UI = null
 $env.SYS_MONITOR_TUI = "btop"
@@ -156,3 +156,7 @@ fzf --nushell | save -f ($nu.default-config-dir | path join "autoload" "_fzf_int
 
 # Television
 tv init nu | save -f ($nu.default-config-dir | path join "autoload/tv.nu")
+
+use '/home/tricky-fat-cat/.config/broot/launcher/nushell/br' *
+
+alias br = br ~
