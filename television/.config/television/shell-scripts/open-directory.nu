@@ -7,7 +7,7 @@ def --env main [dir: string, --use-file-manager] {
 
     let terminal_pid = (find-ancestor-terminal)
     let command = if $use_file_manager {
-        $env | get -o FILE_MANAGER
+        env-or "FILE_MANAGER_TUI" null
     } else {
         null
     }

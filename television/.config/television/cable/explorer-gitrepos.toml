@@ -10,8 +10,7 @@ This channel uses
 """
 
 [source]
-# this is a macos version of the command. While perfectly usable on linux, you may want to tweak it a bit.
-command = "fd -g .git -HL -t d -d 10 --prune ~ -E .cache -E .cargo -E .repos -E 'Library' -E 'Application Support' --exec dirname '{}'"
+command = "fd -g .git -HL -t d -d 10 --prune ~ -E .cache -E .cargo -E .repos -E .local --exec dirname '{}'"
 display = "{split:/:-1}"
 
 [preview]
@@ -30,10 +29,16 @@ backtab = "select_prev_entry"
 ctrl-j = "select_next_entry"
 ctrl-k = "select_prev_entry"
 q = "quit"
-enter = "actions:edit"
-ctrl-e = "actions:explore"
-ctrl-c = "actions:cd"
-ctrl-g = "actions:git"
+enter = "actions:zellij"
+shift-g = "actions:git"
+shift-e = "actions:explore"
+shift-c = "actions:cd"
+
+[actions.zellij]
+description = "Open a terminal with an new zellij session or attaches to existing one."
+command = "~/.config/television/shell-scripts/open-zellij.nu {}"
+shell = "nu"
+mode = "fork"
 
 [actions.explore]
 description = "Open repository in a new terminal window with file manager runnign. Shell must have FILE_MANAGER variable"
@@ -42,19 +47,13 @@ shell = "nu"
 mode = "fork"
 
 [actions.cd]
-description = "Open a new terminal in the selected repository"
+description = "Open a new terminal with cwd in selected repository directory"
 command = "~/.config/television/shell-scripts/open-directory.nu {}"
 shell = "nu"
 mode = "fork"
 
-[actions.edit]
-description = "Open repository in an editor in new terminal window."
-command = "~/.config/television/shell-scripts/open-editor.nu {}"
-shell = "nu"
-mode = "fork"
-
 [actions.git]
-description = "Open repository in new terminal window wiht running git client."
+description = "Open repository in new terminal window with running git client."
 command = "~/.config/television/shell-scripts/open-git.nu {}"
 shell = "nu"
 mode = "fork"
