@@ -21,7 +21,7 @@
 #           Defaults            #
 # ----------------------------- #
 # Default buffer editor
-$env.config.buffer_editor = 'hx'
+$env.config.buffer_editor = 'helix'
 
 # Disable welcome
 $env.config.show_banner = false
@@ -50,7 +50,7 @@ const NU_PLUGIN_DIRS = [
 # ----------------------------- #
 #           Variables           #
 # ----------------------------- #
-$env.EDITOR = "hx"
+$env.EDITOR = "helix"
 $env.TERMINAL = "foot"
 $env.FILE_MANAGER_TUI = "yazi"
 $env.GIT_TUI = "lazygit"
@@ -82,6 +82,9 @@ use tv-utils.nu *
 # ----------------------------- #
 #            Aliases            #
 # ----------------------------- #
+
+# Helix. Only for Arch package
+alias hx = ^helix
 
 # Show hidden files
 alias core-ls = ls
