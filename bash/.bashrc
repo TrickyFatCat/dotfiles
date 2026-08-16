@@ -8,13 +8,16 @@
 PS1='[\u@\h \W]\$ '
 
 # Variables
-export EDITOR=hx
+export EDITOR=helix
+export TERMINAL=foot
 
 # PATH
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
 
 # Aliases
+alias hx='helix'
+
 alias q='exit'
 alias c='clear'
 
