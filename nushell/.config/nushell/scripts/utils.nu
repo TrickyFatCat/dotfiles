@@ -125,3 +125,14 @@ export def mkexec [file: string] {
 
     chmod +x $file
 }
+
+# Open .bashrc
+export def --env 'config bash' [] {
+    let editor = env-or "EDITOR" null
+
+    if $editor == null {
+        error make ("EDITOR is not set in config.nu")
+    }
+
+    ^$editor ("~/.bashrc" | path expand)
+}
