@@ -1,0 +1,14 @@
+layout {
+    pane split_direction="vertical" {
+        pane name="Editor" {
+            command "helix"
+        	args "."
+        }
+        pane split_direction="horizontal" {
+            pane name="Git" {
+                command "lazygit"
+            }
+            pane 
+        }
+    }
+}

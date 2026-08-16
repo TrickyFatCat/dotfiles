@@ -6,3 +6,4 @@ nushell/.config/nushell/autoload
 # Excluded as they automatically changes with themes
 /mango/.config/mango/noctalia.conf
 /foot/.config/foot/themes/noctalia
+/zellij/.config/zellij/themes/noctalia.kdl
