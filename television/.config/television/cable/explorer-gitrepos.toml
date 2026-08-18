@@ -30,9 +30,8 @@ ctrl-j = "select_next_entry"
 ctrl-k = "select_prev_entry"
 q = "quit"
 enter = "actions:zellij"
-shift-g = "actions:git"
-shift-e = "actions:explore"
-shift-c = "actions:cd"
+ctrl-g = "actions:git"
+ctrl-e = "actions:explore"
 
 [actions.zellij]
 description = "Open a terminal with an new zellij session or attaches to existing one."
@@ -41,12 +40,6 @@ shell = "nu"
 mode = "fork"
 
 [actions.explore]
-description = "Open repository in a new terminal window with file manager runnign. Shell must have FILE_MANAGER variable"
-command = "~/.config/television/shell-scripts/open-directory.nu {} --use-file-manager"
-shell = "nu"
-mode = "fork"
-
-[actions.cd]
 description = "Open a new terminal with cwd in selected repository directory"
 command = "~/.config/television/shell-scripts/open-directory.nu {}"
 shell = "nu"

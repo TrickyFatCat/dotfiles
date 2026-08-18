@@ -6,13 +6,21 @@ def --env main [dir: string] {
     }
 
     let terminal_pid = (find-ancestor-terminal)
-    let command = $env | get -o GIT_TUI | default null
+    let command = env-or "GIT_TUI" null
 
     if $command == null {
         return
     }
 
-    open-terminal --dir=$dir --detached --command=$command
+    let appid = env-or "TERMINAL" "foot"
+    let title = $"Git | ($dir | path basename)"
+
+    if (mwm-is-client-opened $appid --title=$title) {
+        let id = mwm-get-client-id $appid --title=$title
+        mwm-focus-client $id
+    } else {
+        open-terminal --title=$title --dir=$dir --detached --command=$command
+    }
 
     if $terminal_pid != null {
         kill $terminal_pid
