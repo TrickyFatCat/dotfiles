@@ -138,6 +138,9 @@ alias mpv = ^mpv --profile=linux-amd,no-av1
 # Eza tree view
 alias lst = ^eza -a -T -L 3 --git-ignore --icons always
 
+# Fastfetch
+alias ff = ^fastfetch
+
 # ----------------------------- #
 #        Implementations        #
 # ----------------------------- #
