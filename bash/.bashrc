@@ -58,3 +58,5 @@ eval "$(zoxide init bash)"
 
 # Television
 eval "$(tv init bash)"
+
+source /home/tricky-fat-cat/.config/broot/launcher/bash/br
