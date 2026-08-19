@@ -29,6 +29,13 @@ name = "json"
 formatter = { command = "dprint", args = ["fmt", "--stdin", "json"] }
 auto-format = true
 
+# JSONC
+[[language]]
+name = "jsonc"
+# formatter = { command = "prettier", args = [ "--parser", "jsonc" ] }
+formatter = { command = "dprint", args = ["fmt", "--stdin", "jsonc"]}
+auto-format = true
+
 # Nushell
 [[language]]
 name = "nu"
