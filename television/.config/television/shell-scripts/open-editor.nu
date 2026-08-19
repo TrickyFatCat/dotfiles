@@ -7,12 +7,17 @@ def --env main [dir: string] {
         return
     }
 
-    let config = get-kitty-alt-config
-    let title = $dir | path basename
-    let editor = env-or "EDITOR" "hx"
     let terminal_pid = (find-ancestor-terminal)
+    let editor = env-or "EDITOR" "hx"
+    let appid = env-or "TERMINAL" "foot"
+    let title = $"Edit | ($dir | path basename)"
 
-    open-terminal --config=$config --title=$title --dir=$dir --detached --command=$editor --args=["."]
+    if (mwm-is-client-opened $appid --title=$title) {
+        let id = mwm-get-client-id $appid --title=$title
+        mwm-focus-client $id
+    } else {
+        open-terminal --title=$title --dir=$dir --detached --command=$editor --args=["."]
+    }
 
     if $terminal_pid != null {
         kill $terminal_pid
