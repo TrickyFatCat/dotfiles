@@ -160,6 +160,7 @@ fzf --nushell | save -f ($nu.default-config-dir | path join "autoload" "_fzf_int
 # Television
 tv init nu | save -f ($nu.default-config-dir | path join "autoload/tv.nu")
 
-use '/home/tricky-fat-cat/.config/broot/launcher/nushell/br' *
+# Broot wrapper
+use '~/.config/broot/launcher/nushell/br' *
 
-alias br = br ~
+alias brh = br -h ~/
