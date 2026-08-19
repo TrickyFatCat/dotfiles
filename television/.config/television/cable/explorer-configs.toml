@@ -13,7 +13,7 @@ This channel uses
 [source]
 # Saved just in case
 # command = '''fd -H -p -t d '\.config/[^/]+$' ~/dotfiles | lines | str trim -c '/' -r | uniq | sort | str join "\n"'''
-command = '''glob ~/.config/* | where ($it | path type) == dir | to text'''
+command = '''glob ~/.config/* | where (($it | path type) == dir) or (($it | path type) == symlink) | to text'''
 display = "{split:/:-1}"
 shell = "nu"
 

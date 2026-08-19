@@ -1,7 +1,9 @@
 #!/usr/bin/env -S nu --stdin --config ~/.config/nushell/config.nu 
 
 def --env main [dir: string] {
-    if ($dir | path type) != dir {
+    let path = $dir | path expand
+
+    if ($path | path type) != dir {
         return
     }
 
