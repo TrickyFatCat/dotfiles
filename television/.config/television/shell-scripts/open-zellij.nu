@@ -6,7 +6,7 @@ def --env main [dir: string] {
     }
 
     let terminal_pid = (find-ancestor-terminal)
-    let session_name = $"develop-($dir | path basename)"
+    let session_name = $"Develop ⎥ ($dir | path basename)"
     let appid = env-or "TERMINAL" "foot"
 
     if (mwm-is-client-opened $appid --title=$session_name) {

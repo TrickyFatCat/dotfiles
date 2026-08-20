@@ -10,7 +10,7 @@ def --env main [dir: string] {
     let terminal_pid = (find-ancestor-terminal)
     let editor = env-or "EDITOR" "hx"
     let appid = env-or "TERMINAL" "foot"
-    let title = $"Edit | ($dir | path basename)"
+    let title = $"Edit ⎥ ($dir | path basename)"
 
     if (mwm-is-client-opened $appid --title=$title) {
         let id = mwm-get-client-id $appid --title=$title

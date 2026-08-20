@@ -15,7 +15,7 @@ def --env main [dir: string] {
     }
 
     let appid = env-or "TERMINAL" "foot"
-    let title = $"Git | ($dir | path basename)"
+    let title = $"Git ⎥ ($dir | path basename)"
 
     if (mwm-is-client-opened $appid --title=$title) {
         let id = mwm-get-client-id $appid --title=$title
