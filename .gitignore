@@ -7,4 +7,4 @@ nushell/.config/nushell/autoload
 /mango/.config/mango/noctalia.conf
 /foot/.config/foot/themes/noctalia
 /zellij/.config/zellij/themes/noctalia.kdl
-/fastfetch/.config/fastfetch/noctalia.jsonc
+/fastfetch/.config/fastfetch/themes/noctalia.jsonc
