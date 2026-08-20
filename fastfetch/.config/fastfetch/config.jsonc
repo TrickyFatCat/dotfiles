@@ -1,0 +1,92 @@
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "logo": {
+    "type": "file",
+    "source": "~/.config/fastfetch/ascii.txt",
+    "position": "left",
+    "color": {
+      "1": "blue"
+    },
+    "padding": {
+      "top": 2,
+      "bottom": 0,
+      "right": 2,
+      "left": 2
+    }
+  },
+  "display": {
+    "separator": "",
+    "key": {
+      "type": "string",
+      "width": 12
+    },
+    "size": {
+      "spaceBeforeUnit": "always",
+      "ndigits": 0
+    }
+  },
+  "modules": [
+    "break",
+    {
+      "type": "custom",
+      "format": "╭───────╮",
+      "outputColor": "bright_cyan"
+    },
+    {
+      "type": "cpu",
+      "key": "│  CPU │",
+      "showPeCoreCount": true
+    },
+    {
+      "type": "gpu",
+      "key": "│  GPU │",
+      "detectionMethod": "pci",
+      "format": "{vendor} {name}"
+    },
+    {
+      "type": "display",
+      "key": "│  DSP │",
+      "format": "{width} x {height} | {inch}\" | {refresh-rate} Hz"
+    },
+    {
+      "type": "memory",
+      "key": "│  RAM │",
+      "format": "{total}"
+    },
+    {
+      "type": "os",
+      "key": "│  OS  │",
+      "format": "{pretty-name}"
+    },
+    {
+      "type": "wm",
+      "key": "│  WM  │",
+      "format": "{pretty-name}"
+    },
+    {
+      "type": "terminal",
+      "key": "│  TRM │",
+      "format": "{pretty-name}"
+    },
+    {
+      "type": "shell",
+      "key": "│  SHL │",
+      "format": "{pretty-name}"
+    },
+    {
+      "type": "colors",
+      "key": "│  CLR │",
+      "symbol": "circle"
+    },
+    {
+      "type": "terminalfont",
+      "key": "│  FNT │",
+      "format": "{name}"
+    },
+    {
+      "type": "custom",
+      "format": "╰───────╯",
+      "outputColor": "bright_cyan"
+    }
+  ]
+}
