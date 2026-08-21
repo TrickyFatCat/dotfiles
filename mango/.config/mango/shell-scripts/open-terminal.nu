@@ -1,6 +1,6 @@
 #!/usr/bin/env -S nu --config ~/.config/nushell/config.nu
 
-let default_terminal = (env-or "TERMINAL" "kitty")
+let default_terminal = (env-or "TERMINAL" "foot")
 
 # ---------------------------------------------------------------------------
 # Focused-client detection via mmsg (MangoWM's IPC tool)

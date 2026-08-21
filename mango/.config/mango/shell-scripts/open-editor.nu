@@ -1,6 +1,6 @@
 #!/usr/bin/env -S nu --config ~/.config/nushell/config.nu
 
-let default_terminal = (env-or "TERMINAL" "kitty")
+let default_terminal = (env-or "TERMINAL" "foot")
 let editor = (env-or "EDITOR" "hx")
 
 # ---------------------------------------------------------------------------

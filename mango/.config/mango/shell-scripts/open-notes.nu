@@ -8,13 +8,12 @@ const NOTES_DIR = "~/Documents/Notes"
 # then again by that terminal itself (with --inner) to do the actual work.
 def --env main [--inner] {
     if not $inner {
-        let term = (env-or "TERMINAL" "kitty")
-        let config = get-kitty-alt-config
+        let term = (env-or "TERMINAL" "foot")
         let self_path = $env.CURRENT_FILE | path expand
 
         # NOT detached: this process must stay alive and match what mango
         # spawned, so toggle_named_scratchpad tracking keeps working.
-        open-terminal $term --title=$TITLE --config=$config --command=$self_path --args=["--inner"]
+        open-terminal $term --title=$TITLE --command=$self_path --args=["--inner"]
         return
     }
 
