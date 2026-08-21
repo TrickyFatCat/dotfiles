@@ -1,7 +1,7 @@
 # Returns an id of a given appid and optional title
+# Both appid and title are regex patterns
 export def mwm-get-client-id [appid: string, --title: string] {
     let clients = mmsg get all-clients | from json | get clients
-    mut id = -1
 
     let matches = (
         $clients
@@ -57,12 +57,12 @@ export def mwm-get-focusing-client-id [] {
 
 # Focus a client by a given id
 # 
-# --FocusBack: allows to focus last focusing client back
-export def mwm-focus-client [id: int, --FocusBack] {
+# --focus-back: allows to focus last focusing client back
+export def mwm-focus-client [id: int, --focus-back] {
     let focusing_id: int = mwm-get-focusing-client-id
 
     if $focusing_id == $id {
-        if $FocusBack {
+        if $focus_back {
             mmsg dispatch focuslast
         }
         return
@@ -75,6 +75,7 @@ export def mwm-focus-client [id: int, --FocusBack] {
 export def mwm-kill-client [id: int, --force] {
     if $force {
         mmsg dispatch killclient,force client,($id)
+        return
     }
     mmsg dispatch killclient client,($id)
     return
@@ -82,7 +83,7 @@ export def mwm-kill-client [id: int, --force] {
 
 # Moves currently focused client to tag
 export def mwm-move-to-tag [tag: int] {
-    if (is-valid-tag $tag) {
+    if not (is-valid-tag $tag) {
         return
     }
 
@@ -146,7 +147,7 @@ export def mwm-validate-config [config: string = "~/.config/mango/config.conf"] 
     let path = $config | path expand
 
     if not ($path | path exists) {
-        error make ("Invalid mango config path.")
+        error make ({msg: $"Invalid mango config path: ($path)"})
     }
 
     ^mango -c $path -p
