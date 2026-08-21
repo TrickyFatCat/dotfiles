@@ -13,7 +13,7 @@ def --env main [dir?: string] {
 
     if (mwm-is-client-opened $appid) {
         let id = mwm-get-client-id $appid
-        mwm-focus-client $id --FocusBack
+        mwm-focus-client $id --focus-back
         return
     }
 
