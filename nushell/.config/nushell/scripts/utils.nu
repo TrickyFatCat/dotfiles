@@ -26,20 +26,12 @@ export def --env get-kitty-alt-config [] {
     $env | get -o KITTY_ALT_CONFIG
 }
 
-# Walk up from a pid to the nearest ancestor whose name is in `names`.
-# Matches by name, not a fixed hop count, so it still works when a process
-# adds extra hops in between (wrappers, shells, a config-watcher child, etc).
-# Returns the matching pid, or null if none found before hitting pid 1.
+# Walk up the process tree from `start_pid` and return the nearest ancestor
+# whose process name is in `names`.
+# Returns null if no match is found.
 #
-# Good for: finding "which terminal is hosting this session" so you can
-# close it after spawning a replacement; finding an enclosing ssh/tmux/
-# systemd-run session to signal; any case where you know the process
-# you're after by name, but not how many layers of wrapping sit between
-# it and where your script is currently running.
-# 
-# Examples:
+# Example:
 #   find-ancestor-by-name $nu.pid ["kitty" "alacritty" "wezterm"]
-#   find-ancestor-by-name $nu.pid ["sshd"]   # find the ssh session process
 export def find-ancestor-by-name [start_pid: int, names: list<string>] {
     mut current = $start_pid
     mut seen = []
@@ -60,8 +52,9 @@ export def find-ancestor-by-name [start_pid: int, names: list<string>] {
     }
 }
 
+# Find the terminal process that owns the current Nushell session.
 export def find-ancestor-terminal [] {
-    find-ancestor-by-name $nu.pid (registry | get name)
+    find-ancestor-by-name $nu.pid ($registry | get name)
 }
 
 # Makes given file executable
