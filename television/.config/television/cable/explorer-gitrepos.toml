@@ -14,7 +14,7 @@ command = "fd -g .git -HL -t d -d 10 --prune ~ -E .cache -E .cargo -E .repos -E 
 display = "{split:/:-1}"
 
 [preview]
-command = "eza -a -T -L 3 --git-ignore --color always --icons always '{}'"
+command = "~/.config/television/shell-scripts/preview-git-repo.nu '{}'"
 shell = "nu"
 
 [ui.remote_control]
