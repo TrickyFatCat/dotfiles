@@ -1,144 +1,130 @@
 #!/usr/bin/env nu
 
+# ----- Theme -----
+
+const colors = {
+    text: "default"
+    subtle: "light_gray"
+    dim: "dark_gray"
+    label: "light_gray"
+    blue: "blue"
+    green: "green"
+    yellow: "yellow"
+    red: "red"
+    mauve: "magenta"
+    pink: "magenta"
+    rosewater: "light_magenta"
+    maroon: "red"
+    peach: "yellow"
+    teal: "cyan"
+}
+
+const icons = {
+    repository: "󰉋"
+    path: ""
+    remote: "󰖟"
+    lfs: "󰋚"
+    state: "󰊢"
+    branch: ""
+    upstream: "󰘬"
+    tag: "󱈤"
+    hash: ""
+    subject: "󰈙"
+    author: ""
+    age: "󰥔"
+    worktree: ""
+    clean: ""
+    warning: ""
+    conflicts: "󱪗"
+    ahead: ""
+    behind: ""
+    staged: "󰷊"
+    modified: "󰷈"
+    deleted: "󱪟"
+    renamed: "󰤘"
+    typechanged: "󰬲"
+    untracked: "󱪝"
+    stashed: "󰥥"
+    submodules: "󰏗"
+    changed: "󰜷"
+}
+
+const label_width = 10
+const status_label_width = 12
+const section_width = 28
+const fetch_ttl_seconds = 300
+const fetch_timeout = "0.3s"
+
+# ----- Rendering primitives -----
+
 def paint [fg: string, text: string] {
     $"(ansi {fg: $fg})($text)(ansi reset)"
 }
 
 def dim [text: string] {
-    paint "#6c7086" $text
+    paint $colors.dim $text
 }
 
 def label [icon: string, name: string] {
-    let padded = ($"($name):" | fill --alignment l --width 10)
-    paint "#a6adc8" $"($icon) ($padded)"
+    let padded = ($"($name):" | fill --alignment l --width $label_width)
+    paint $colors.label $"($icon) ($padded)"
 }
 
 def section [name: string] {
-    dim ($" ($name) " | fill --alignment c --character "─" --width 24)
+    let icon = match $name {
+        "Repository" => $icons.repository
+        "Position" => $icons.branch
+        "Worktree" => $icons.worktree
+        "Submodules" => $icons.submodules
+        _ => ""
+    }
+    dim ($" ($icon) ($name) " | fill --alignment c --character "─" --width $section_width)
 }
 
 def status_count_line [count: int, icon: string, name: string, fg: string] {
     if $count > 0 {
-        let padded = $name | fill --alignment l --width 12
-        $"(paint $fg $icon) (paint $fg $padded) (paint '#cdd6f4' ($count | into string))"
+        let padded = $name | fill --alignment l --width $status_label_width
+        $"(paint $fg $icon) (paint $fg $padded) (paint $colors.text ($count | into string))"
     } else {
         ""
     }
 }
 
 def status_text_line [icon: string, name: string, value: string, fg: string] {
-    let padded = $name | fill --alignment l --width 12
-    $"(paint $fg $icon) (paint $fg $padded) (paint '#cdd6f4' $value)"
+    let padded = $name | fill --alignment l --width $status_label_width
+    $"(paint $fg $icon) (paint $fg $padded) (paint $colors.text $value)"
 }
 
-def is_conflict [line: string] {
-    let xy = $line | str substring 0..1
-    (($xy | str contains "U") or ($xy in ["AA" "DD"]))
-}
+# ----- Small helpers -----
 
-def has_lfs_attribute [file: path] {
-    if not ($file | path exists) {
-        return false
-    }
+def compact_home [p: path] {
+    let full = $p | path expand
+    let home = $env.HOME | path expand
 
-    open --raw $file
-    | lines
-    | any {|line|
-        let trimmed = $line | str trim
-        ($trimmed != "") and (not ($trimmed | str starts-with "#")) and ($trimmed | str contains "filter=lfs")
-    }
-}
-
-def repo_uses_lfs [repo: path] {
-    let attrs_raw = (
-        ^git -C $repo ls-files --cached --others --exclude-standard -- '**/.gitattributes' .gitattributes
-        | complete
-    )
-    let attr_paths = if $attrs_raw.exit_code == 0 { $attrs_raw.stdout | lines | uniq } else { [] }
-    let worktree_attrs = $attr_paths | any {|attr| has_lfs_attribute ([$repo $attr] | path join) }
-
-    let info_attr_raw = (^git -C $repo rev-parse --git-path info/attributes | complete)
-    let info_attr = if $info_attr_raw.exit_code == 0 { $info_attr_raw.stdout | str trim } else { "" }
-    let info_attr_path = if $info_attr == "" {
-        ""
-    } else if ($info_attr | str starts-with "/") {
-        $info_attr
+    if $full == $home {
+        "~"
+    } else if ($full | str starts-with $"($home)/") {
+        let suffix = $full | str substring (($home | str length)..)
+        $"~($suffix)"
     } else {
-        [$repo $info_attr] | path join
-    }
-    let info_attrs = if $info_attr_path == "" { false } else { has_lfs_attribute $info_attr_path }
-
-    $worktree_attrs or $info_attrs
-}
-
-def submodule_state [repo: path, submodule_path: string, prefix: string] {
-    if $prefix == "-" {
-        return {icon: "", status: "not initialized", fg: "#f9e2af"}
-    }
-
-    if $prefix == "U" {
-        return {icon: "󱪗", status: "conflict", fg: "#f38ba8"}
-    }
-
-    if $prefix == "+" {
-        return {icon: "󰜷", status: "changed", fg: "#fab387"}
-    }
-
-    let full_path = [$repo $submodule_path] | path join
-
-    if not ($full_path | path exists) {
-        return {icon: "", status: "missing", fg: "#f38ba8"}
-    }
-
-    let sm_status = (^git -C $full_path status --porcelain=v1 | complete)
-
-    if $sm_status.exit_code != 0 {
-        return {icon: "", status: "missing", fg: "#f38ba8"}
-    }
-
-    let entries = $sm_status.stdout | lines
-
-    if ($entries | length) == 0 {
-        {icon: "", status: "clean", fg: "#a6e3a1"}
-    } else if ($entries | all {|line| $line | str starts-with "??" }) {
-        {icon: "󱪝", status: "untracked", fg: "#cba6f7"}
-    } else {
-        {icon: "󰷈", status: "dirty", fg: "#fab387"}
+        $full
     }
 }
 
-def submodule_section [repo: path] {
-    let raw = (^git -C $repo submodule status --recursive | complete)
-
-    if ($raw.exit_code != 0) or (($raw.stdout | str trim) == "") {
-        return {count: 0, issue_count: 0, lines: []}
-    }
-
-    let items = $raw.stdout | lines | each {|line|
-        let prefix = $line | str substring 0..0
-        let parts = $line | str substring 1.. | str trim | split row " "
-        let path = $parts | get 1? | default ""
-
-        if $path == "" {
-            null
-        } else {
-            let state = submodule_state $repo $path $prefix
-            let status = $state.status | fill --alignment l --width 16
-            {
-                status: $state.status,
-                line: $"(paint $state.fg $state.icon) (paint $state.fg $status) (paint '#cdd6f4' $path)"
-            }
-        }
-    } | where {|item| $item != null }
-
-    if ($items | length) == 0 {
-        {count: 0, issue_count: 0, lines: []}
-    } else {
-        let rows = $items | get line
-        let issue_count = $items | where status != "clean" | length
-        {count: ($items | length), issue_count: $issue_count, lines: $rows}
-    }
+def git_complete [repo: path, args: list<string>] {
+    ^git -C $repo ...$args | complete
 }
+
+def git_stdout [repo: path, args: list<string>] {
+    let result = git_complete $repo $args
+    if $result.exit_code == 0 { $result.stdout | str trim } else { "" }
+}
+
+def git_success [repo: path, args: list<string>] {
+    (git_complete $repo $args | get exit_code) == 0
+}
+
+# ----- Runtime fetch cache -----
 
 def preview_cache_dir [] {
     let uid_raw = ^id -u | complete
@@ -184,14 +170,122 @@ def record_fetch_cache [repo: path] {
     $now | save --force (fetch_cache_file $repo)
 }
 
-def git_path [repo: path, name: string] {
-    let raw = ^git -C $repo rev-parse --git-path $name | complete
+# ----- Repository / remote data -----
 
-    if $raw.exit_code != 0 {
+def remote_display_value [repo: path, origin_url: string] {
+    let fallback = $repo | path basename
+    let origin_url = $origin_url | str trim
+
+    if $origin_url == "" {
+        return $fallback
+    }
+
+    let cleaned = $origin_url | str replace -r '\.git$' ''
+    let parsed = if ($cleaned | str starts-with "git@") {
+        $cleaned | parse -r '^git@(?P<site>[^:]+):(?P<user>.+)/(?P<repo>[^/]+)$' | get 0?
+    } else if (($cleaned | str starts-with "http://") or ($cleaned | str starts-with "https://") or ($cleaned | str starts-with "ssh://")) {
+        $cleaned | parse -r '^[a-z]+://(?:[^@/]+@)?(?P<site>[^/:]+)(?::\d+)?/(?P<user>.+)/(?P<repo>[^/]+)$' | get 0?
+    } else {
+        $cleaned | parse -r '^(?P<site>[^/:]+)/(?P<user>.+)/(?P<repo>[^/]+)$' | get 0?
+    }
+
+    if $parsed == null {
+        $origin_url
+    } else {
+        $"($parsed.site)/($parsed.user)/($parsed.repo)"
+    }
+}
+
+def get_repository_info [repo: path] {
+    let origin = git_complete $repo [remote get-url origin]
+    let origin_url = if $origin.exit_code == 0 { $origin.stdout | str trim } else { "" }
+
+    {
+        path: $repo
+        display_path: (compact_home $repo)
+        has_origin: ($origin.exit_code == 0)
+        origin_url: $origin_url
+        remote_value: (remote_display_value $repo $origin_url)
+    }
+}
+
+def fetch_remote_if_needed [repo: path, repo_info: record] {
+    if not $repo_info.has_origin {
         return ""
     }
 
-    let path = $raw.stdout | str trim
+    if (which timeout | length) == 0 {
+        return (paint $colors.yellow $"($icons.warning) remote check skipped")
+    }
+
+    if (fetch_cache_is_fresh $repo $fetch_ttl_seconds) {
+        return ""
+    }
+
+    let fetch_result = (
+        with-env { GIT_TERMINAL_PROMPT: "0" } {
+            ^timeout $fetch_timeout git -C $repo fetch origin --quiet
+            | complete
+        }
+    )
+    let fetch_error = $fetch_result.stderr | str trim | lines | get 0? | default ""
+
+    if $fetch_result.exit_code == 0 {
+        record_fetch_cache $repo
+        ""
+    } else if $fetch_result.exit_code == 124 {
+        ""
+    } else if $fetch_error == "" {
+        paint $colors.red $"($icons.warning) could not fetch remote"
+    } else {
+        $"(paint $colors.red $'($icons.warning) could not fetch remote') (dim $fetch_error)"
+    }
+}
+
+# ----- LFS data -----
+
+def has_lfs_attribute [file: path] {
+    if not ($file | path exists) {
+        return false
+    }
+
+    open --raw $file
+    | lines
+    | any {|line|
+        let trimmed = $line | str trim
+        ($trimmed != "") and (not ($trimmed | str starts-with "#")) and ($trimmed | str contains "filter=lfs")
+    }
+}
+
+def repo_uses_lfs [repo: path] {
+    let attrs = git_complete $repo [ls-files --cached --others --exclude-standard -- "**/.gitattributes" .gitattributes]
+    let attr_paths = if $attrs.exit_code == 0 { $attrs.stdout | lines | uniq } else { [] }
+    let worktree_attrs = $attr_paths | any {|attr| has_lfs_attribute ([$repo $attr] | path join) }
+
+    let info_attr = git_stdout $repo [rev-parse --git-path info/attributes]
+    let info_attr_path = if $info_attr == "" {
+        ""
+    } else if ($info_attr | str starts-with "/") {
+        $info_attr
+    } else {
+        [$repo $info_attr] | path join
+    }
+    let info_attrs = if $info_attr_path == "" { false } else { has_lfs_attribute $info_attr_path }
+
+    $worktree_attrs or $info_attrs
+}
+
+def get_lfs_info [repo: path] {
+    let active = repo_uses_lfs $repo
+    let installed = git_success $repo [lfs version]
+
+    {active: $active, installed: $installed}
+}
+
+# ----- Repository state data -----
+
+def git_path [repo: path, name: string] {
+    let path = git_stdout $repo [rev-parse --git-path $name]
 
     if $path == "" {
         ""
@@ -207,283 +301,264 @@ def git_path_exists [repo: path, name: string] {
     ($path != "") and ($path | path exists)
 }
 
-def repo_state_line [repo: path] {
-    let states = [
+def get_repo_states [repo: path] {
+    [
         (if (git_path_exists $repo "rebase-merge") or (git_path_exists $repo "rebase-apply") { "rebase" } else { "" })
         (if (git_path_exists $repo "MERGE_HEAD") { "merge" } else { "" })
         (if (git_path_exists $repo "CHERRY_PICK_HEAD") { "cherry-pick" } else { "" })
         (if (git_path_exists $repo "REVERT_HEAD") { "revert" } else { "" })
         (if (git_path_exists $repo "BISECT_LOG") { "bisect" } else { "" })
     ] | where {|state| $state != "" }
-
-    if ($states | length) == 0 {
-        ""
-    } else {
-        $"(label '󰊢' 'state') (paint '#f9e2af' ($states | str join ', '))"
-    }
 }
 
-def compact_home [p: path] {
-    let full = $p | path expand
-    let home = $env.HOME | path expand
+# ----- HEAD / position data -----
 
-    if $full == $home {
-        "~"
-    } else if ($full | str starts-with $"($home)/") {
-        let suffix = $full | str substring (($home | str length)..)
-        $"~($suffix)"
-    } else {
-        $full
-    }
-}
-
-def repo_display [repo: path, origin_url: string] {
-    let fallback = $repo | path basename
-    let origin_url = $origin_url | str trim
-
-    if $origin_url == "" {
-        return {label: "repo", value: $fallback}
-    }
-
-    let cleaned = $origin_url | str replace -r '\.git$' ''
-    let parsed = if ($cleaned | str starts-with "git@") {
-        $cleaned | parse -r '^git@(?P<site>[^:]+):(?P<user>.+)/(?P<repo>[^/]+)$' | get 0?
-    } else if (($cleaned | str starts-with "http://") or ($cleaned | str starts-with "https://") or ($cleaned | str starts-with "ssh://")) {
-        $cleaned | parse -r '^[a-z]+://(?:[^@/]+@)?(?P<site>[^/:]+)(?::\d+)?/(?P<user>.+)/(?P<repo>[^/]+)$' | get 0?
-    } else {
-        $cleaned | parse -r '^(?P<site>[^/:]+)/(?P<user>.+)/(?P<repo>[^/]+)$' | get 0?
-    }
-
-    if $parsed == null {
-        {label: "repo", value: $fallback}
-    } else {
-        {label: "remote", value: $"($parsed.site)/($parsed.user)/($parsed.repo)"}
-    }
-}
-
-def main [repo: path] {
-    let repo = $repo | path expand
-    let check = (^git -C $repo rev-parse --is-inside-work-tree | complete)
-
-    if $check.exit_code != 0 {
-        return (paint "#f38ba8" $" Not a git repository: ($repo)")
-    }
-
-    let origin_result = (^git -C $repo remote get-url origin | complete)
-    let origin_url = if $origin_result.exit_code == 0 { $origin_result.stdout | str trim } else { "" }
-    let display = repo_display $repo $origin_url
-    let path_line = $"(label '' 'path') (paint '#cdd6f4' (compact_home $repo))"
-    let state_line = repo_state_line $repo
-    let has_commits = (^git -C $repo rev-parse --verify --quiet HEAD | complete | get exit_code) == 0
-    let has_timeout = (which timeout | length) > 0
-    let lfs_active = repo_uses_lfs $repo
-    let lfs_installed = (^git lfs version | complete | get exit_code) == 0
-    let lfs_line = if $lfs_active and $lfs_installed {
-        $"(label '󰋚' 'lfs') (paint '#a6e3a1' 'active')"
-    } else if $lfs_active {
-        $"(label '󰋚' 'lfs') (paint '#f9e2af' 'configured; git-lfs missing')"
-    } else {
-        ""
-    }
-
-    let fetch_line = if $origin_result.exit_code != 0 {
-        ""
-    } else if not $has_timeout {
-        paint "#f9e2af" " Remote check skipped"
-    } else if (fetch_cache_is_fresh $repo 300) {
-        ""
-    } else {
-        let fetch_result = (
-            with-env { GIT_TERMINAL_PROMPT: "0" } {
-                ^timeout 1s git -C $repo fetch origin --quiet
-                | complete
-            }
-        )
-        let fetch_error = $fetch_result.stderr | str trim | lines | get 0? | default ""
-
-        if $fetch_result.exit_code == 0 {
-            record_fetch_cache $repo
-            ""
-        } else if $fetch_result.exit_code == 124 {
-            ""
-        } else if $fetch_error == "" {
-            paint "#f38ba8" " Could not fetch remote"
-        } else {
-            $"(paint '#f38ba8' ' Could not fetch remote') (dim $fetch_error)"
-        }
-    }
-
-    let branch_raw = (^git -C $repo branch --show-current | complete)
-    let branch_name = $branch_raw.stdout | str trim
-    let detached_ref = if $has_commits {
-        ^git -C $repo describe --tags --always HEAD | complete | get stdout | str trim
-    } else { "HEAD" }
+def get_position_info [repo: path] {
+    let has_commits = git_success $repo [rev-parse --verify --quiet HEAD]
+    let branch_name = git_stdout $repo [branch --show-current]
+    let detached_ref = if $has_commits { git_stdout $repo [describe --tags --always HEAD] } else { "HEAD" }
     let branch = if $branch_name == "" { $"detached HEAD at ($detached_ref)" } else { $branch_name }
-    let upstream_raw = if $branch_name == "" {
-        {stdout: "", stderr: "", exit_code: 1}
-    } else {
-        ^git -C $repo rev-parse --abbrev-ref --symbolic-full-name "@{upstream}" | complete
+    let upstream = if $branch_name == "" { "" } else { git_stdout $repo [rev-parse --abbrev-ref --symbolic-full-name "@{upstream}"] }
+    let tag = if $has_commits { git_stdout $repo [describe --tags --exact-match HEAD] } else { "" }
+    let sep = char --unicode 1f
+    let commit_fields = if $has_commits {
+        git_stdout $repo [log -1 "--pretty=%h%x1f%s%x1f%an%x1f%cr"] | split row $sep
+    } else { [] }
+
+    {
+        has_commits: $has_commits
+        branch: $branch
+        upstream: $upstream
+        tag: $tag
+        hash: ($commit_fields | get 0? | default "")
+        subject: ($commit_fields | get 1? | default "")
+        author: ($commit_fields | get 2? | default "")
+        age: ($commit_fields | get 3? | default "")
     }
-    let upstream = if $upstream_raw.exit_code == 0 { $upstream_raw.stdout | str trim } else { "" }
-    let upstream_line = if $upstream == "" { "" } else { $"(label '󰘬' 'upstream') (paint '#94e2d5' $upstream)" }
+}
 
-    let no_commits_line = ""
+# ----- Worktree data -----
 
-    let tag_raw = if $has_commits {
-        ^git -C $repo describe --tags --exact-match HEAD | complete
-    } else { {stdout: "", stderr: "", exit_code: 1} }
-    let tag = if $tag_raw.exit_code == 0 {
-        $tag_raw.stdout | str trim
-    } else { "" }
+def is_conflict [line: string] {
+    let xy = $line | str substring 0..1
+    (($xy | str contains "U") or ($xy in ["AA" "DD"]))
+}
 
-    let commit = if $has_commits {
-        ^git -C $repo rev-parse --short HEAD
-        | complete
-        | get stdout
-        | str trim
-    } else { "" }
-    let subject = if $has_commits {
-        ^git -C $repo log -1 --pretty=%s
-        | complete
-        | get stdout
-        | str trim
-    } else { "" }
-    let age = if $has_commits {
-        ^git -C $repo log -1 --pretty=%cr
-        | complete
-        | get stdout
-        | str trim
-    } else { "" }
+def parse_count [text: string, pattern: string, column: string] {
+    try {
+        $text | parse -r $pattern | get 0 | get $column | into int
+    } catch { 0 }
+}
 
-    let status_raw = (^git -C $repo status --porcelain=v1 --branch | complete)
-    let status_lines = $status_raw.stdout | lines
-    let branch_line = (
-        $status_lines
-        | where {|l| $l | str starts-with "##" }
-        | get 0?
-        | default ""
-    )
+def get_worktree_info [repo: path] {
+    let status = git_complete $repo [status --porcelain=v1 --branch]
+    let status_lines = $status.stdout | lines
+    let branch_line = $status_lines | where {|l| $l | str starts-with "##" } | get 0? | default ""
     let entries = $status_lines | where {|l| not ($l | str starts-with "##") }
     let normal_entries = $entries | where {|l| not (is_conflict $l) }
 
-    let ahead = (
-        try {
-            $branch_line
-            | parse -r 'ahead (?P<ahead>\d+)'
-            | get 0.ahead
-            | into int
-        } catch { 0 }
-    )
-    let behind = (
-        try {
-            $branch_line
-            | parse -r 'behind (?P<behind>\d+)'
-            | get 0.behind
-            | into int
-        } catch { 0 }
-    )
+    {
+        ahead: (parse_count $branch_line 'ahead (?P<ahead>\d+)' ahead)
+        behind: (parse_count $branch_line 'behind (?P<behind>\d+)' behind)
+        conflicts: ($entries | where {|l| is_conflict $l } | length)
+        untracked: ($entries | where {|l| $l | str starts-with "??" } | length)
+        staged: ($normal_entries | where {|l| ($l | str substring 0..0) in ["A" "M"] } | length)
+        modified: ($normal_entries | where {|l| ($l | str substring 1..1) == "M" } | length)
+        deleted: ($normal_entries | where {|l| (($l | str substring 0..0) == "D") or (($l | str substring 1..1) == "D") } | length)
+        renamed: ($normal_entries | where {|l| ($l | str substring 0..0) in ["R" "C"] } | length)
+        typechanged: ($normal_entries | where {|l| ($l | str substring 0..1 | str contains "T") } | length)
+        stashed: (git_stdout $repo [stash list] | lines | length)
+    }
+}
 
-    let conflicted = $entries | where {|l| is_conflict $l } | length
-    let untracked = $entries | where {|l| $l | str starts-with "??" } | length
-    let staged = (
-        $normal_entries
-        | where {|l| ($l | str substring 0..0) in ["A" "M"] }
-        | length
-    )
-    let modified = $normal_entries | where {|l| ($l | str substring 1..1) == "M" } | length
-    let deleted = (
-        $normal_entries
-        | where {|l| (($l | str substring 0..0) == "D") or (($l | str substring 1..1) == "D") }
-        | length
-    )
-    let renamed = (
-        $normal_entries
-        | where {|l| ($l | str substring 0..0) in ["R" "C"] }
-        | length
-    )
-    let typechanged = (
-        $normal_entries
-        | where {|l| ($l | str substring 0..1 | str contains "T") }
-        | length
-    )
-    let stashed = (
-        ^git -C $repo stash list
-        | complete
-        | get stdout
-        | lines
-        | length
-    )
+# ----- Submodule data -----
 
-    let worktree_status_rows = [
-        (status_count_line $conflicted "󱪗" "conflicts" "#f38ba8")
-        (status_count_line $ahead "" "ahead" "#a6e3a1")
-        (status_count_line $behind "" "behind" "#f38ba8")
-        (status_count_line $staged "󰷊" "staged" "#89b4fa")
-        (status_count_line $modified "󰷈" "modified" "#fab387")
-        (status_count_line $deleted "󱪟" "deleted" "#f38ba8")
-        (status_count_line $renamed "󰤘" "renamed" "#94e2d5")
-        (status_count_line $typechanged "󰬲" "typechanged" "#94e2d5")
-        (status_count_line $untracked "󱪝" "untracked" "#cba6f7")
-        (status_count_line $stashed "󰥥" "stashed" "#f9e2af")
-    ] | where {|x| $x != "" }
-
-    let worktree_status_rows = if ($worktree_status_rows | length) == 0 {
-        [ (paint "#a6e3a1" " clean") ]
-    } else {
-        $worktree_status_rows
+def submodule_state [repo: path, submodule_path: string, prefix: string] {
+    if $prefix == "-" {
+        return {icon: $icons.warning, status: "not initialized", fg: $colors.yellow}
     }
 
-    let tag_line = if $tag == "" { "" } else { $"(label '󱈤' 'tag') (paint '#f2cdcd' $tag)" }
-    let hash_line = if $has_commits { $"(label '' 'hash') (paint '#eba0ac' $commit)" } else { "" }
-    let name_line = if $has_commits { $"(label '󰎔' 'name') (paint '#cdd6f4' $subject)" } else { "" }
-    let age_line = if $has_commits { $"(label '󰥔' 'age') (paint '#bac2de' $age)" } else { "" }
-    let commit_line = if $has_commits { "" } else { $"(label '' 'commit') (paint '#f9e2af' ' No commits done')" }
-    let submodules = submodule_section $repo
-    let submodule_summary_rows = if $submodules.count == 0 {
-        []
-    } else {
-        let issue_fg = if $submodules.issue_count == 0 { "#a6e3a1" } else { "#f9e2af" }
-        [
-            (status_text_line "󰏗" "number" ($submodules.count | into string) "#89b4fa")
-            (status_text_line "" "issues" ($submodules.issue_count | into string) $issue_fg)
-        ]
-    }
-    let submodule_lines = if $submodules.count == 0 {
-        []
-    } else {
-        let rows = $submodule_summary_rows | append $submodules.lines | where {|line| $line != "" }
-        ["" (section "Submodules")] | append $rows
+    if $prefix == "U" {
+        return {icon: $icons.conflicts, status: "conflict", fg: $colors.red}
     }
 
-    let remote_line = if $origin_result.exit_code == 0 {
-        let remote_value = if $display.label == "remote" { $display.value } else { $origin_url }
-        $"(label '󰖟' 'remote') (paint '#89b4fa' $remote_value)"
-    } else {
-        $"(label '󰖟' 'remote') (paint '#f9e2af' ' Remote is not configured')"
+    if $prefix == "+" {
+        return {icon: $icons.changed, status: "changed", fg: $colors.peach}
     }
 
-    let identity_lines = [
+    let full_path = [$repo $submodule_path] | path join
+
+    if not ($full_path | path exists) {
+        return {icon: $icons.warning, status: "missing", fg: $colors.red}
+    }
+
+    let sm_status = git_complete $full_path [status --porcelain=v1]
+
+    if $sm_status.exit_code != 0 {
+        return {icon: $icons.warning, status: "missing", fg: $colors.red}
+    }
+
+    let entries = $sm_status.stdout | lines
+
+    if ($entries | length) == 0 {
+        {icon: $icons.clean, status: "clean", fg: $colors.green}
+    } else if ($entries | all {|line| $line | str starts-with "??" }) {
+        {icon: $icons.untracked, status: "untracked", fg: $colors.mauve}
+    } else {
+        {icon: $icons.modified, status: "dirty", fg: $colors.peach}
+    }
+}
+
+def get_submodule_info [repo: path] {
+    let top_level = git_stdout $repo [rev-parse --show-toplevel]
+    let repo_root = if $top_level == "" { $repo } else { $top_level }
+    let gitmodules = [$repo_root ".gitmodules"] | path join
+
+    if not ($gitmodules | path exists) {
+        return {count: 0, issue_count: 0, lines: []}
+    }
+
+    let raw = git_complete $repo_root [submodule status --recursive]
+
+    if ($raw.exit_code != 0) or (($raw.stdout | str trim) == "") {
+        return {count: 0, issue_count: 0, lines: []}
+    }
+
+    let items = $raw.stdout | lines | each {|line|
+        let prefix = $line | str substring 0..0
+        let parts = $line | str substring 1.. | str trim | split row " "
+        let path = $parts | get 1? | default ""
+
+        if $path == "" {
+            null
+        } else {
+            let state = submodule_state $repo_root $path $prefix
+            let status = $state.status | fill --alignment l --width 16
+            {
+                status: $state.status,
+                line: $"(paint $state.fg $state.icon) (paint $state.fg $status) (paint $colors.text $path)"
+            }
+        }
+    } | where {|item| $item != null }
+
+    if ($items | length) == 0 {
+        {count: 0, issue_count: 0, lines: []}
+    } else {
+        {
+            count: ($items | length)
+            issue_count: ($items | where status != "clean" | length)
+            lines: ($items | get line)
+        }
+    }
+}
+
+# ----- Section renderers -----
+
+def render_repository_section [repo_info: record, lfs: record, states: list<string>, fetch_line: string] {
+    let path_line = $"(label $icons.path 'path') (paint $colors.text $repo_info.display_path)"
+    let remote_line = if $repo_info.has_origin {
+        $"(label $icons.remote 'remote') (paint $colors.blue $repo_info.remote_value)"
+    } else {
+        $"(label $icons.remote 'remote') (paint $colors.yellow $'($icons.warning) not configured')"
+    }
+    let lfs_line = if $lfs.active and $lfs.installed {
+        $"(label $icons.lfs 'lfs') (paint $colors.green 'active')"
+    } else if $lfs.active {
+        $"(label $icons.lfs 'lfs') (paint $colors.yellow 'configured; git-lfs missing')"
+    } else {
+        ""
+    }
+    let state_line = if ($states | length) == 0 {
+        ""
+    } else {
+        $"(label $icons.state 'state') (paint $colors.yellow ($states | str join ', '))"
+    }
+
+    [
         (section "Repository")
         $path_line
         $remote_line
         $lfs_line
         $fetch_line
         $state_line
-        $no_commits_line
+    ] | where {|line| $line != "" }
+}
+
+def render_position_section [head: record] {
+    let rows = if $head.has_commits {
+        [
+            $"(label $icons.branch 'branch') (paint $colors.rosewater $head.branch)"
+            (if $head.upstream == "" { "" } else { $"(label $icons.upstream 'upstream') (paint $colors.teal $head.upstream)" })
+            (if $head.tag == "" { "" } else { $"(label $icons.tag 'tag') (paint $colors.rosewater $head.tag)" })
+            $"(label $icons.hash 'hash') (paint $colors.maroon $head.hash)"
+            $"(label $icons.subject 'subject') (paint $colors.text $head.subject)"
+            $"(label $icons.author 'author') (paint $colors.mauve $head.author)"
+            $"(label $icons.age 'age') (paint $colors.subtle $head.age)"
+        ]
+    } else {
+        [
+            $"(label $icons.branch 'branch') (paint $colors.rosewater $head.branch)"
+            $"(label $icons.hash 'commit') (paint $colors.yellow $'($icons.warning) no commits yet')"
+        ]
+    }
+
+    ["" (section "Position")] | append ($rows | where {|line| $line != "" })
+}
+
+def render_worktree_section [worktree: record] {
+    let rows = [
+        (status_count_line $worktree.conflicts $icons.conflicts "conflicts" $colors.red)
+        (status_count_line $worktree.ahead $icons.ahead "ahead" $colors.green)
+        (status_count_line $worktree.behind $icons.behind "behind" $colors.red)
+        (status_count_line $worktree.staged $icons.staged "staged" $colors.blue)
+        (status_count_line $worktree.modified $icons.modified "modified" $colors.peach)
+        (status_count_line $worktree.deleted $icons.deleted "deleted" $colors.red)
+        (status_count_line $worktree.renamed $icons.renamed "renamed" $colors.teal)
+        (status_count_line $worktree.typechanged $icons.typechanged "typechanged" $colors.teal)
+        (status_count_line $worktree.untracked $icons.untracked "untracked" $colors.mauve)
+        (status_count_line $worktree.stashed $icons.stashed "stashed" $colors.yellow)
     ] | where {|line| $line != "" }
 
-    let head_rows = [
-        $"(label '' 'branch') (paint '#f2cdcd' $branch)"
-        $upstream_line
-        $tag_line
-        $hash_line
-        $name_line
-        $age_line
-        $commit_line
-    ] | where {|line| $line != "" }
-    let head_lines = (["" (section "HEAD")] | append $head_rows)
+    let rows = if ($rows | length) == 0 { [ (paint $colors.green $"($icons.clean) clean") ] } else { $rows }
 
-    let status_lines = (["" (section "Status")] | append $worktree_status_rows)
+    ["" (section "Worktree")] | append $rows
+}
 
-    $identity_lines | append $head_lines | append $status_lines | append $submodule_lines | str join (char newline)
+def render_submodules_section [submodules: record] {
+    if $submodules.count == 0 {
+        return []
+    }
+
+    let issue_fg = if $submodules.issue_count == 0 { $colors.green } else { $colors.yellow }
+    let summary = [
+        (status_text_line $icons.submodules "number" ($submodules.count | into string) $colors.blue)
+        (status_text_line $icons.warning "issues" ($submodules.issue_count | into string) $issue_fg)
+    ]
+
+    ["" (section "Submodules")] | append $summary | append $submodules.lines
+}
+
+# ----- Main -----
+
+def main [repo: path] {
+    let repo = $repo | path expand
+
+    if not (git_success $repo [rev-parse --is-inside-work-tree]) {
+        return (paint $colors.red $"($icons.warning) Not a git repository: ($repo)")
+    }
+
+    let repo_info = get_repository_info $repo
+    let fetch_line = fetch_remote_if_needed $repo $repo_info
+    let lfs = get_lfs_info $repo
+    let states = get_repo_states $repo
+    let head = get_position_info $repo
+    let worktree = get_worktree_info $repo
+    let submodules = get_submodule_info $repo
+
+    []
+    | append (render_repository_section $repo_info $lfs $states $fetch_line)
+    | append (render_position_section $head)
+    | append (render_worktree_section $worktree)
+    | append (render_submodules_section $submodules)
+    | str join (char newline)
 }
