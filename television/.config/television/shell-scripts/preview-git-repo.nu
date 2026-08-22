@@ -71,12 +71,16 @@ def label [icon: string, name: string] {
 }
 
 def section [name: string] {
-    let icon = match $name {
-        "Repository" => $icons.repository
-        "Position" => $icons.branch
-        "Worktree" => $icons.worktree
-        "Submodules" => $icons.submodules
-        _ => ""
+    let icon = if $name == "Repository" {
+        $icons.repository
+    } else if $name == "Position" {
+        $icons.branch
+    } else if $name == "Worktree" {
+        $icons.worktree
+    } else if ($name | str starts-with "Submodules") {
+        $icons.submodules
+    } else {
+        ""
     }
     dim ($" ($icon) ($name) " | fill --alignment c --character "─" --width $section_width)
 }
@@ -529,13 +533,17 @@ def render_submodules_section [submodules: record] {
         return []
     }
 
-    let issue_fg = if $submodules.issue_count == 0 { $colors.green } else { $colors.yellow }
+    let issues_line = if $submodules.issue_count == 0 {
+        ""
+    } else {
+        status_text_line $icons.warning "issues" ($submodules.issue_count | into string) $colors.yellow
+    }
+    let count = $submodules.count | into string | fill --alignment r --character "0" --width 2
     let summary = [
-        (status_text_line $icons.submodules "number" ($submodules.count | into string) $colors.blue)
-        (status_text_line $icons.warning "issues" ($submodules.issue_count | into string) $issue_fg)
-    ]
+        $issues_line
+    ] | where {|line| $line != "" }
 
-    ["" (section "Submodules")] | append $summary | append $submodules.lines
+    ["" (section $"Submodules ($count)")] | append $summary | append $submodules.lines
 }
 
 # ----- Main -----

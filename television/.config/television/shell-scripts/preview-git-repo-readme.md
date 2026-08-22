@@ -71,8 +71,7 @@ Example output:
 If the repo has submodules, a fourth section appears:
 
 ```text
-─────── 󰏗 Submodules ───────
-󰏗 number       2
+───── 󰏗 Submodules 02 ──────
  issues       1
  clean            libs/foo
  not initialized  libs/bar
@@ -132,9 +131,12 @@ Hidden when the repository has no `.gitmodules` file.
 
 When present, shows:
 
-- total number of submodules
-- number of submodule issues
+- total number of submodules in the section header
+- number of submodule issues, only when issues exist
 - per-submodule state
+
+
+The submodule count is shown in the header using two digits. The `issues` row is hidden when the issue count is zero.
 
 Supported submodule states:
 
