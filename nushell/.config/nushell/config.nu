@@ -71,14 +71,10 @@ $env.NU_LIB_DIRS = (
 
 use completers.nu *
 register-completers
-
 use utils.nu *
 use terminal-registry.nu *
 use detect-terminal.nu *
 use browsers-registry.nu *
-use completers.nu *
-register-completers
-
 use mango-utils.nu *
 
 # ----------------------------- #
