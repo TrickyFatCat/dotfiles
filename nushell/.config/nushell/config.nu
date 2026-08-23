@@ -62,9 +62,12 @@ $env.SYS_MONITOR_TUI = "btop"
 # ----------------------------- #
 use std/dirs
 
-$env.NU_LIB_DIRS = [
-    ($nu.default-config-dir | path join "scripts")
-]
+$env.NU_LIB_DIRS = (                                                                                                                                                                      
+       $env.NU_LIB_DIRS?                                                                                                                                                                     
+       | default []                                                                                                                                                                          
+       | append ($nu.default-config-dir | path join "scripts")                                                                                                                               
+       | uniq                                                                                                                                                                                
+)
 
 use completers.nu *
 register-completers
@@ -167,3 +170,5 @@ tv init nu | save -f ($nu.default-config-dir | path join "autoload/tv.nu")
 use '~/.config/broot/launcher/nushell/br' *
 
 alias brh = br -h ~/
+
+use '/home/tricky-fat-cat/.config/broot/launcher/nushell/br' *
