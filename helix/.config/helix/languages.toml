@@ -33,7 +33,7 @@ auto-format = true
 [[language]]
 name = "jsonc"
 # formatter = { command = "prettier", args = [ "--parser", "jsonc" ] }
-formatter = { command = "dprint", args = ["fmt", "--stdin", "jsonc"]}
+formatter = { command = "dprint", args = ["fmt", "--stdin", "jsonc"] }
 auto-format = true
 
 # Nushell
