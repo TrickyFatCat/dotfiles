@@ -1,10 +1,27 @@
-# Terminal Registry and Detection Helpers
+<h1>Terminal Registry and Detection Helpers</h1>
 
-> Disclaimer: This script and documentation were built with AI assistance. Review and test them before relying on them in your environment.
+<!--toc:start-->
 
-Reviewed documentation for `terminal-registry.nu` and its optional companion `detect-terminal.nu`.
+- [What this provides](#what-this-provides)
+- [Files](#files)
+- [Supported terminal names](#supported-terminal-names)
+- [Importing the module](#importing-the-module)
+- [Setting a default terminal](#setting-a-default-terminal)
+- [`build-args`](#build-args)
+- [`open-terminal`](#open-terminal)
+- [Terminal-specific behavior](#terminal-specific-behavior)
+- [Adding a new terminal](#adding-a-new-terminal)
+- [Quick validation command](#quick-validation-command)
 
-## What this provides
+<!--toc:end-->
+
+> [!attention]
+>
+> terminal-registry.nu and its documentation were built with AI assistance.
+>
+> Review and test before relying on them in your environment.
+
+## About
 
 - `terminal-registry.nu` defines a small Nushell registry for supported terminal emulators.
 - `build-args` returns the argument list that would be passed to a terminal, without launching it.
@@ -135,13 +152,13 @@ open-terminal ghostty --title "Detached" --dir /tmp --detached
 
 Current argument mapping:
 
-| Registry name | Generated terminal flags |
-| --- | --- |
-| `kitty` | `--class`, `--title`, `--directory`, then `-e <command> <args>` |
-| `foot`, `footclient` | `--app-id`, `--title`, `-D`, then command and args directly |
-| `alacritty` | `--class`, `--title`, `--working-directory`, then `-e <command> <args>` |
-| `wezterm`, `wezterm-gui` | `start`, `--class`, `--cwd`, passthrough args, then `-- <command> <args>` |
-| `ghostty` | `--class=...`, `--title=...`, `--working-directory=...`, then `-e <command> <args>` |
+| Registry name            | Generated terminal flags                                                            |
+| ------------------------ | ----------------------------------------------------------------------------------- |
+| `kitty`                  | `--class`, `--title`, `--directory`, then `-e <command> <args>`                     |
+| `foot`, `footclient`     | `--app-id`, `--title`, `-D`, then command and args directly                         |
+| `alacritty`              | `--class`, `--title`, `--working-directory`, then `-e <command> <args>`             |
+| `wezterm`, `wezterm-gui` | `start`, `--class`, `--cwd`, passthrough args, then `-- <command> <args>`           |
+| `ghostty`                | `--class=...`, `--title=...`, `--working-directory=...`, then `-e <command> <args>` |
 
 Notes from the script:
 
