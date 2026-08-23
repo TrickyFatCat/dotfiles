@@ -54,7 +54,6 @@ $env.EDITOR = "helix"
 $env.TERMINAL = "foot"
 $env.FILE_MANAGER_TUI = "yazi"
 $env.GIT_TUI = "lazygit"
-$env.GIT_UI = null
 $env.SYS_MONITOR_TUI = "btop"
 
 # ----------------------------- #
