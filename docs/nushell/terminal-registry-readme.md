@@ -5,6 +5,7 @@
 - [Overview](#overview)
 - [Requirements](#requirements)
 - [Quick Start](#quick-start)
+- [Usage Example](#usage-example)
 - [Configuration](#configuration)
   - [Default Terminal](#default-terminal)
   - [Global Use](#global-use)
@@ -62,6 +63,41 @@ Expected result:
 ```
 
 This command does not launch a terminal. It only shows the argument list that would be passed to `foot`.
+
+## Usage Example
+
+`terminal-registry.nu` is useful when a window-manager keybinding should open a terminal app without hardcoding terminal-specific flags.
+
+As a result, scripts can switch to another configured terminal by changing `$env.TERMINAL`, without rewriting Nushell scripts.
+
+This example opens `yazi` in a detached terminal window at the requested directory:
+
+```nu
+use terminal-registry.nu *
+
+def main [dir: string = "~"] {
+    let terminal = ($env.TERMINAL? | default "foot")
+    let path = ($dir | path expand)
+
+    open-terminal $terminal --dir $path --detached --command yazi
+}
+```
+
+This example opens `cliamp` in a detached terminal window:
+
+```nu
+use terminal-registry.nu *
+
+def main [] {
+    let terminal = ($env.TERMINAL? | default "foot")
+
+    open-terminal $terminal --detached --command cliamp
+}
+```
+
+`--detached` lets the keybinding script exit without waiting.
+
+The registry translates shared options such as `--dir` and `--command` into the correct flags for `$env.TERMINAL`.
 
 ## Configuration
 
