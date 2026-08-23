@@ -11,21 +11,6 @@ export def --env env-or [name: string, fallback] {
     $env | get -o $name | default $fallback
 }
 
-# Checks if current terminal is kitty
-export def --env is-kitty-terminal [] {
-    (env-or "TERMINAL" "kitty") == "kitty"
-}
-
-# Returns $env.KITTY_ALT_CONFIG if possible
-# Does NOT validate kitty config
-export def --env get-kitty-alt-config [] {
-    if not (is-kitty-terminal) {
-        return null
-    }
-
-    $env | get -o KITTY_ALT_CONFIG
-}
-
 # Walk up the process tree from `start_pid` and return the nearest ancestor
 # whose process name is in `names`.
 # Returns null if no match is found.
