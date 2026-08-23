@@ -139,7 +139,7 @@ alias lst = ^eza -a -T -L 3 --git-ignore --icons always
 alias ff = ^fastfetch
 
 # ----------------------------- #
-#        Implementations        #
+#          Integratinos         #
 # ----------------------------- #
 mkdir ($nu.default-config-dir | path join "autoload")
 
