@@ -1,11 +1,18 @@
-# Returns an id of a given appid and optional title
+# Returns an id of a given appid or a title
 # Both appid and title are regex patterns
-export def mwm-get-client-id [appid: string, --title: string] {
+#
+# appid: appid/class of a target app
+# --title: title of a target app
+export def mwm-get-client-id [appid?: string, --title: string] {
+    if ($appid == null) and ($title == null) {
+        error make ("Invalid function call. Provide at least appid or --title.")
+    }
+
     let clients = mmsg get all-clients | from json | get clients
 
     let matches = (
         $clients
-        | where {|c| ($c.appid =~ $appid) and ($title == null or ($c.title =~ $title))}
+        | where {|c| ($appid == null or ($c.appid =~ $appid)) and ($title == null or ($c.title =~ $title))}
     )
 
     if ($matches | is-empty) {
@@ -16,7 +23,9 @@ export def mwm-get-client-id [appid: string, --title: string] {
 }
 
 # Checks if there's a client of a given appid and/or title is opened
-export def mwm-is-client-opened [appid: string, --title: string] {
+# appid: appid/class of a target app
+# --title: title of a target app
+export def mwm-is-client-opened [appid?: string, --title: string] {
     ((mwm-get-client-id $appid --title=$title) != null)
 }
 
