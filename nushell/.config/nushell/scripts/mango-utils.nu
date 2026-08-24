@@ -23,8 +23,9 @@ export def mwm-get-client-id [appid?: string, --title: string] {
 }
 
 # Checks if there's a client of a given appid and/or title is opened
+# 
 # appid: appid/class of a target app
-# --title: title of a target app
+# # --title: title of a target app
 export def mwm-is-client-opened [appid?: string, --title: string] {
     ((mwm-get-client-id $appid --title=$title) != null)
 }
@@ -160,4 +161,9 @@ export def mwm-validate-config [config: string = "~/.config/mango/config.conf"] 
     }
 
     ^mango -c $path -p
+}
+
+# Prints the list of existing commands
+export def mwm-list-commands [] {
+    help commands | where name starts-with mwm- | select name description
 }
