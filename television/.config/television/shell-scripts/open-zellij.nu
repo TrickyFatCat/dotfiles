@@ -7,10 +7,9 @@ def --env main [dir: string] {
 
     let terminal_pid = (find-ancestor-terminal)
     let session_name = $"Develop ⎥ ($dir | path basename)"
-    let appid = env-or "TERMINAL" "foot"
 
-    if (mwm-is-client-opened $appid --title=$session_name) {
-        let id = mwm-get-client-id $appid --title=$session_name
+    if (mwm-is-client-opened --title=$session_name) {
+        let id = mwm-get-client-id --title=$session_name
         mwm-focus-client $id
     } else {
         let result = ^zellij list-sessions -s | complete

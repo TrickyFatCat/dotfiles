@@ -14,11 +14,10 @@ def --env main [dir: string] {
         return
     }
 
-    let appid = env-or "TERMINAL" "foot"
     let title = $"Git ⎥ ($dir | path basename)"
 
-    if (mwm-is-client-opened $appid --title=$title) {
-        let id = mwm-get-client-id $appid --title=$title
+    if (mwm-is-client-opened --title=$title) {
+        let id = mwm-get-client-id --title=$title
         mwm-focus-client $id
     } else {
         open-terminal --title=$title --dir=$dir --detached --command=$command
