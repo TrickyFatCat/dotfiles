@@ -55,6 +55,8 @@ $env.TERMINAL = "foot"
 $env.FILE_MANAGER_TUI = "yazi"
 $env.GIT_TUI = "lazygit"
 $env.SYS_MONITOR_TUI = "btop"
+$env.BROWSER = "zen-browser"
+$env.BROWSER_APPID = "zen"
 
 # ----------------------------- #
 #            Modules            #
@@ -73,7 +75,6 @@ register-completers
 use utils.nu *
 use terminal-registry.nu *
 use detect-terminal.nu *
-use browsers-registry.nu *
 use mango-utils.nu *
 
 # ----------------------------- #
