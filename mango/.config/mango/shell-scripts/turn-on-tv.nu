@@ -7,7 +7,7 @@ def --env main [
     ...args: string
 ] {
     let appid = if ($class | is-empty) {
-        env-or "TERMINAL" "kitty"
+        env-or "TERMINAL" "foot"
     } else {
         $class
     }
@@ -20,8 +20,7 @@ def --env main [
             mwm-kill-client $id
             return
         }
-
-        # TODO: Either make it optioanal or remove. Clients can be global.
+        # NOTE: Even though clients can be global, this window won't be opered for lond time
         let tag = mwm-get-active-tag
         mwm-move-client-to-tag $id $tag
         return
