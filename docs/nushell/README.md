@@ -102,6 +102,12 @@ They are used by various helper scripts, and integrations, e.g. mangoWM and Tele
 | `$env.FILE_MANAGER_TUI` | Default file manager for terminal   |
 | `$env.GIT_TUI`          | Default git client for terminal     |
 | `$env.SYS_MONITOR_TUI`  | Default system monitor for terminal |
+| `$env.BROWSER`          | Default browser                     |
+| `$env.BROWSER_APPID`    | Default browser appid               |
+
+> [!NOTE]
+> Set `$env.BROWSER_APPID` if class/appid of your browser differs from binary name.
+> For example Zen binary is `zen-browser`, but appid is `zen`.
 
 System-defined Nushell variables can be found in the official Nushell documentation.
 
