@@ -6,12 +6,11 @@
 - [Load the Module](#load-the-module)
 - [Quick Examples](#quick-examples)
 - [Command Reference](#command-reference)
+  - [Utility Commands](#utility-commands)
   - [Client Lookup](#client-lookup)
   - [Client Information](#client-information)
-  - [Utility Commands](#utility-commands)
   - [Tag Information](#tag-information)
   - [Client Actions](#client-actions)
-  - [Configuration Validation](#configuration-validation)
 - [Useful Links](#useful-links)
 
 <!--toc:end-->
@@ -75,12 +74,43 @@ The commands use the `mwm-` prefix.
 
 Reference sections:
 
+- [Utility Commands](#utility-commands) — rediscover available Mango helper commands.
 - [Client Lookup](#client-lookup) — find clients by app ID or title.
 - [Client Information](#client-information) — inspect clients and focused-client data.
-- [Utility Commands](#utility-commands) — rediscover available Mango helper commands.
 - [Tag Information](#tag-information) — inspect active tags and monitor tags.
 - [Client Actions](#client-actions) — focus, kill, and move clients.
-- [Configuration Validation](#configuration-validation) — validate Mango config files.
+
+### Utility Commands
+
+| Syntax                         | Result                                                       |
+| ------------------------------ | ------------------------------------------------------------ |
+| `mwm-list-commands`            | Compact table of available `mwm-` commands and descriptions. |
+| `mwm-get-client-field-names`   | Unique list of available client fields.                      |
+| `mwm-validate-config`          | Runs `mango -c ~/.config/mango/config.conf -p`.              |
+| `mwm-validate-config <config>` | Runs `mango -c <config> -p`.                                 |
+
+> [!NOTE]
+> `mwm-validate-config` expands the config path before passing it to Mango.
+> If the file does not exist, it raises an error with the expanded path.
+
+Examples:
+
+```nu
+# Returns command names and descriptions for Mango helpers.
+mwm-list-commands
+
+# Returns available fields for client tables.
+mwm-get-client-field-names
+
+# Validates the default Mango config.
+mwm-validate-config
+
+# Validates a config in the current directory.
+mwm-validate-config ./config.conf
+
+# Validates the main Mango config.
+mwm-validate-config ~/.config/mango/config.conf
+```
 
 ### Client Lookup
 
@@ -119,7 +149,6 @@ mwm-is-client-opened chromium --title "Mango"
 | -------------------------------------- | ------------------------------------------------------ |
 | `mwm-get-all-clients`                  | Full client table from `mmsg get all-clients`.         |
 | `mwm-get-all-clients [id appid title]` | Client table with the user-selected fields.            |
-| `mwm-get-client-field-names`           | Unique list of available client fields.                |
 | `mwm-get-focusing-client`              | Focused client record from `mmsg get focusing-client`. |
 | `mwm-get-focusing-client-id`           | ID of the focused client.                              |
 | `mwm-get-last-open-surface`            | Record from `mmsg get last_open_surface`.              |
@@ -127,9 +156,6 @@ mwm-is-client-opened chromium --title "Mango"
 Examples:
 
 ```nu
-# Returns available fields for client tables.
-mwm-get-client-field-names
-
 # Returns clients with only these fields.
 mwm-get-all-clients [id appid title tag]
 
@@ -144,19 +170,6 @@ mwm-get-last-open-surface
 ```
 
 Use `mwm-get-client-field-names` first when you are not sure which fields your Mango version exposes.
-
-### Utility Commands
-
-| Syntax              | Returns                                                      |
-| ------------------- | ------------------------------------------------------------ |
-| `mwm-list-commands` | Compact table of available `mwm-` commands and descriptions. |
-
-Examples:
-
-```nu
-# Returns command names and descriptions for Mango helpers.
-mwm-list-commands
-```
 
 ### Tag Information
 
@@ -231,34 +244,6 @@ if $id != null {
 > `mwm-kill-client` closes windows.
 > Use `mwm-get-client-id` or `mwm-get-all-clients [id appid title]` first to confirm the target ID.
 
-### Configuration Validation
-
-| Syntax                         | Returns                                         |
-| ------------------------------ | ----------------------------------------------- |
-| `mwm-validate-config`          | Runs `mango -c ~/.config/mango/config.conf -p`. |
-| `mwm-validate-config <config>` | Runs `mango -c <config> -p`.                    |
-
-Examples:
-
-```nu
-# Validates the default Mango config.
-mwm-validate-config
-
-# Validates a config in the current directory.
-mwm-validate-config ./config.conf
-
-# Validates the main Mango config.
-mwm-validate-config ~/.config/mango/config.conf
-```
-
-> [!NOTE]
-> `mwm-validate-config` expands the config path before passing it to Mango.
-> If the file does not exist, it raises an error with the expanded path.
-
 ## Useful Links
 
-- [Nushell official site](https://www.nushell.sh/)
-- [Nushell GitHub repo](https://github.com/nushell/nushell)
-- [Nushell modules documentation](https://www.nushell.sh/book/modules.html#modules)
-- [Mango GitHub repo](https://github.com/mangowm/mango)
-- [Nushell Configuration](./README.md)
+- [Mango IPC documentation](https://mangowm.github.io/docs/ipc)
