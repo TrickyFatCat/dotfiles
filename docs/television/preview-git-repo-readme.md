@@ -1,52 +1,45 @@
-# Git Repository Preview for Television
+<h1>Television Git Repository Preview</h1>
 
-A Nushell preview script for browsing Git repositories in [Television](https://github.com/alexpasmantier/television).
+<!--toc:start-->
 
-The script shows repository identity, current Git position, worktree state, LFS state, and submodule information in a compact terminal-friendly layout.
+- [Overview](#overview)
+- [Requirements](#requirements)
+- [Preview Output](#preview-output)
+- [Sections](#sections)
+  - [Repository](#repository)
+  - [Position](#position)
+  - [Worktree](#worktree)
+  - [Submodules](#submodules)
+- [Remote Fetch Check](#remote-fetch-check)
+- [Runtime Cache](#runtime-cache)
 
-> Disclaimer: this script and documentation were developed with AI assistance. Review and test before using it in your own environment.
+<!--toc:end-->
 
-## Files
+## Overview
 
-Main script:
+`preview-git-repo.nu` prints the preview for repositories selected by the `explorer-gitrepos` Television channel.
 
-```text
-output/preview-git-repo.nu
-```
+The preview summarizes:
+
+- repository path and `origin` remote;
+- current branch, upstream, tag, commit, author, and commit age;
+- worktree counts such as staged, modified, untracked, ahead, and behind;
+- Git operation state such as merge, rebase, cherry-pick, revert, or bisect;
+- Git LFS status when LFS attributes are configured;
+- submodule state when `.gitmodules` exists.
 
 ## Requirements
 
-Required:
+- Git
+- Nerd Font
 
-- `nu` / Nushell
-- `git`
-- Television
+A Nerd Font is required for the preview icons to render correctly.
 
-Optional:
+> [!NOTE]
+> GNU `timeout` is used for the bounded remote fetch check.
+> If it is not available, the preview still works and only the remote check is skipped.
 
-- `timeout` from GNU coreutils, used to bound remote fetch checks
-- `git-lfs`, only needed if repositories use Git LFS
-- Nerd Font, recommended for icons
-
-## Installation
-
-Copy the script into Television's config directory:
-
-```bash
-mkdir -p ~/.config/television/shell-scripts
-cp output/preview-git-repo.nu ~/.config/television/shell-scripts/preview-git-repo.nu
-chmod +x ~/.config/television/shell-scripts/preview-git-repo.nu
-```
-
-Use this preview configuration in the Television channel TOML:
-
-```toml
-[preview]
-command = "~/.config/television/shell-scripts/preview-git-repo.nu '{}'"
-shell = "nu"
-```
-
-## Layout
+## Preview Output
 
 Example output:
 
@@ -66,12 +59,8 @@ Example output:
 
 ────────  Worktree ────────
  clean
-```
 
-If the repo has submodules, a fourth section appears:
-
-```text
-───── 󰏗 Submodules 02 ──────
+───── 󰏗 Submodules (02) ─────
  issues       1
  clean            libs/foo
  not initialized  libs/bar
@@ -79,40 +68,115 @@ If the repo has submodules, a fourth section appears:
 
 ## Sections
 
+The preview is split into these sections:
+
+- [Repository](#repository) — path, remote, LFS, operation state, and remote-check messages.
+- [Position](#position) — branch, upstream, tag, and latest commit details.
+- [Worktree](#worktree) — clean state or worktree status counts.
+- [Submodules](#submodules) — submodule count and per-submodule state.
+
 ### Repository
 
-Shows:
+The repository section shows identity and high-level repository state.
 
-- local path, with `$HOME` compacted to `~`
-- `origin` remote, if configured
-- warning if no remote is configured
-- LFS status, only when LFS attributes are found
-- Git operation state, such as merge/rebase/cherry-pick/revert/bisect
-- remote fetch warning, only if a non-timeout fetch error occurs
+| Row      | Meaning                                                                |
+| -------- | ---------------------------------------------------------------------- |
+| `path`   | Selected repository path, with `$HOME` compacted to `~`.               |
+| `remote` | Compact `origin` remote display, or `not configured` when absent.      |
+| `lfs`    | Shown only when LFS attributes are found.                              |
+| `state`  | Shown during merge, rebase, cherry-pick, revert, or bisect operations. |
+
+The remote value is shortened for these Git URL formats:
+
+- `git@host:user/repo.git`
+- `https://host/user/repo.git`
+- `http://host/user/repo.git`
+- `ssh://host/user/repo.git`
+- `host/user/repo`
+
+A repository with an `origin` remote shows the compact remote value:
+
+```text
+─────── 󰉋 Repository ───────
+ path:      ~/Projects/project
+󰖟 remote:    github.com/user/project
+```
+
+A repository without an `origin` remote shows `not configured`:
+
+```text
+─────── 󰉋 Repository ───────
+ path:      ~/Projects/project
+󰖟 remote:     not configured
+```
+
+When LFS attributes exist, the `lfs` row shows one of these states:
+
+- `active` when Git LFS is available;
+- `configured; git-lfs missing` when LFS attributes exist but `git lfs version` fails.
+
+```text
+󰋚 lfs:       active
+```
+
+During Git operations, the `state` row shows the active operation state:
+
+```text
+󰊢 state:     rebase
+```
+
+Remote-check warnings also appear in the repository section:
+
+```text
+ remote check skipped
+ could not fetch remote
+```
+
+See [Remote Fetch Check](#remote-fetch-check) for the fetch behavior behind these messages.
 
 ### Position
 
-Shows:
+The position section shows the current Git position.
 
-- branch name or detached HEAD context
-- upstream branch, when configured
-- exact tag at `HEAD`, when present
-- commit hash
-- commit subject
-- commit author
-- commit age
+| Row        | Meaning                                             |
+| ---------- | --------------------------------------------------- |
+| `branch`   | Current branch, or detached HEAD context.           |
+| `upstream` | Upstream branch, when configured.                   |
+| `tag`      | Exact tag at `HEAD`, when present.                  |
+| `hash`     | Short commit hash.                                  |
+| `subject`  | Latest commit subject.                              |
+| `author`   | Latest commit author.                               |
+| `age`      | Relative commit age from Git, such as `3 days ago`. |
 
-If the repository has no commits, this section shows:
+For a repository without commits, the position section shows:
 
 ```text
+────────  Position ────────
+ branch:    main
  commit:     no commits yet
 ```
 
 ### Worktree
 
-Shows clean state or non-zero worktree status rows.
+The worktree section shows `clean` when there are no worktree changes, ahead/behind counts, or stashes:
 
-Status order:
+```text
+────────  Worktree ────────
+ clean
+```
+
+When there is activity, it shows one row per non-zero status count:
+
+```text
+────────  Worktree ────────
+ ahead       1
+󰷊 staged      2
+󰷈 modified    3
+󱪝 untracked   4
+󰥥 stashed     1
+```
+
+Rows appear in this order:
 
 1. conflicts
 2. ahead
@@ -127,47 +191,72 @@ Status order:
 
 ### Submodules
 
-Hidden when the repository has no `.gitmodules` file.
+This section is visible when a repository has submodules.
 
-When present, shows:
+When all submodules are clean, the section contains only clean rows:
 
-- total number of submodules in the section header
-- number of submodule issues, only when issues exist
-- per-submodule state
+```text
+───── 󰏗 Submodules (02) ─────
+ clean            libs/foo
+ clean            libs/bar
+```
 
+When one or more submodules are not clean, an `issues` row appears before the submodule list:
 
-The submodule count is shown in the header using two digits. The `issues` row is hidden when the issue count is zero.
+```text
+───── 󰏗 Submodules (03) ─────
+ issues       2
+ clean            libs/foo
+ not initialized  libs/bar
+󰜷 changed          vendor/baz
+```
 
 Supported submodule states:
 
-- `clean`
-- `not initialized`
-- `changed`
-- `conflict`
-- `dirty`
-- `untracked`
-- `missing`
+| State             | Meaning                                                         |
+| ----------------- | --------------------------------------------------------------- |
+| `clean`           | Submodule status is clean.                                      |
+| `not initialized` | `git submodule status` marks the submodule with `-`.            |
+| `changed`         | `git submodule status` marks the submodule with `+`.            |
+| `conflict`        | `git submodule status` marks the submodule with `U`.            |
+| `dirty`           | Submodule has tracked worktree changes.                         |
+| `untracked`       | Submodule has only untracked files.                             |
+| `missing`         | Submodule path is missing or cannot be inspected as a Git repo. |
 
-## Remote fetch behavior
+## Remote Fetch Check
 
-The script performs a bounded remote check:
+For repositories with an `origin` remote, the script attempts a bounded remote check:
 
 ```text
 git fetch origin --quiet
 ```
 
-Important details:
+Important behavior:
 
-- fetch timeout is `300ms`
-- successful fetch output is hidden
-- fetch timeout is hidden
-- non-timeout fetch errors are shown
-- fetch uses `GIT_TERMINAL_PROMPT=0`, so it should not wait for credentials
-- fetch updates remote-tracking refs only; it does not merge, rebase, or modify checked-out files
+- fetch timeout is `300ms`;
+- fetch uses `GIT_TERMINAL_PROMPT=0`, so it should not wait for credentials;
+- successful fetch output is hidden;
+- timeout output is hidden;
+- non-timeout fetch errors are shown in the repository section;
+- successful fetches are cached for 5 minutes per repository;
+- fetch updates remote-tracking refs only;
+- fetch does not merge, rebase, or modify checked-out files.
 
-## Runtime cache
+If GNU `timeout` is missing, the script shows this warning instead of running `git fetch`:
 
-To avoid repeated fetch delays while browsing, successful fetch timestamps are cached for 5 minutes.
+```text
+ remote check skipped
+```
+
+If `git fetch` fails for a non-timeout reason, the script shows a fetch error in the repository section:
+
+```text
+ could not fetch remote
+```
+
+## Runtime Cache
+
+Successful fetch timestamps are cached to avoid repeated fetch delays while moving through Television results.
 
 Cache location priority:
 
@@ -175,51 +264,40 @@ Cache location priority:
 2. `/run/user/$UID/television-git-preview`
 3. `/tmp/television-git-preview-$UID`
 
-The cache stores only timestamp files named from an MD5 hash of the repo path. It does not store remote URLs, branch names, commit hashes, credentials, or file contents.
+The cache stores timestamp files named from an MD5 hash of the repository path. It does not store remote URLs, branch names, commit hashes, credentials, or file contents.
 
-To clear the runtime cache:
-
-```bash
-find "${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/television-git-preview" -type f -name '*.fetch' -delete
-```
-
-## Performance notes
-
-The script is optimized for preview use:
-
-- commit hash, subject, author, and age are collected with one `git log` command
-- submodule inspection is skipped when `.gitmodules` does not exist
-- remote fetch is bounded to `300ms`
-- successful fetches are cached for the current runtime session
-
-If first-selection delay is still noticeable, the next likely optimization is making remote fetch optional or disabled by default.
-
-## Troubleshooting
-
-### Icons look wrong
-
-Install and select a Nerd Font in your terminal.
-
-### Colors look different than expected
-
-The script uses standard terminal colors rather than fixed hex colors, so colors follow your active terminal theme.
-
-### Preview says `not configured`
-
-The repository does not have an `origin` remote:
+Inspect cache files before deleting them:
 
 ```bash
-git -C /path/to/repo remote -v
+uid="$(id -u)"
+for dir in "${XDG_RUNTIME_DIR:-}" "/run/user/$uid" "/tmp"; do
+  case "$dir" in
+    "") continue ;;
+    "/tmp") cache_dir="/tmp/television-git-preview-$uid" ;;
+    *) cache_dir="$dir/television-git-preview" ;;
+  esac
+
+  if [ -d "$cache_dir" ]; then
+    find "$cache_dir" -maxdepth 1 -type f -name '*.fetch' -print
+  fi
+done
 ```
 
-### Submodules do not show
-
-The section is hidden when `.gitmodules` does not exist. Check:
+Delete cached fetch timestamp files:
 
 ```bash
-test -f /path/to/repo/.gitmodules && echo has-submodules
+uid="$(id -u)"
+for dir in "${XDG_RUNTIME_DIR:-}" "/run/user/$uid" "/tmp"; do
+  case "$dir" in
+    "") continue ;;
+    "/tmp") cache_dir="/tmp/television-git-preview-$uid" ;;
+    *) cache_dir="$dir/television-git-preview" ;;
+  esac
+
+  if [ -d "$cache_dir" ]; then
+    find "$cache_dir" -maxdepth 1 -type f -name '*.fetch' -delete
+  fi
+done
 ```
 
-### LFS does not show
-
-The LFS line is hidden unless LFS attributes are found in `.gitattributes` or `.git/info/attributes`.
+The cleanup command deletes only `.fetch` files directly inside the preview cache directories.
