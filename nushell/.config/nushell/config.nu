@@ -57,6 +57,8 @@ $env.GIT_TUI = "lazygit"
 $env.SYS_MONITOR_TUI = "btop"
 $env.BROWSER = "zen-browser"
 $env.BROWSER_APPID = "zen"
+$env.DISCORD_GUI = "vesktop"
+$env.DISCORD_TUI = "concord"
 
 # ----------------------------- #
 #            Modules            #

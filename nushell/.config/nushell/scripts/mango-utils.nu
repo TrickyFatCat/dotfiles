@@ -27,6 +27,10 @@ export def mwm-get-client-id [appid?: string, --title: string] {
 # appid: appid/class of a target app
 # # --title: title of a target app
 export def mwm-is-client-opened [appid?: string, --title: string] {
+    if $appid == null and $title == null {
+        return false
+    }
+
     ((mwm-get-client-id $appid --title=$title) != null)
 }
 
