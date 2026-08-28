@@ -3,8 +3,7 @@
   },
   "markdown": {
     "lineWidth": 80,
-    "textWrap": "maintainAndWrap",
-    "heading.blankLinesAbove": 2,
+    "textWrap": "maintain",
     "list.indentKind": "pythonMarkdown"
   },
   "toml": {
