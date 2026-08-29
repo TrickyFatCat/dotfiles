@@ -52,7 +52,7 @@ export def mkexec [file: string] {
     chmod +x $file
 }
 
-# Open .bashrc
+# Open .bashrc for editing
 export def --env 'config bash' [] {
     let editor = env-or "EDITOR" null
 
@@ -61,4 +61,31 @@ export def --env 'config bash' [] {
     }
 
     ^$editor ("~/.bashrc" | path expand)
+}
+
+# Checks if a process of a given name is running
+#
+# name - a regex name pattern
+export def is-process-running [name: string] {
+    not (get-process-list $name | is-emty)
+}
+
+# Prints a list of running processes with a given name
+#
+# name - a regex name pattern
+export def get-process-list [name: string] {
+    ps | where name =~ $name
+}
+
+# Toggle kanata
+export def --env 'toggle kanata' [] {
+    let procs = get-process-list "kanata"
+
+    if not ($procs | is-empty) {
+        print $"(ansi red)Stopping kanata process.(ansi reset)"
+        $procs | each {|proc| kill $proc.pid} | ignore
+    } else {
+        print $"(ansi green)Restarting kanata process.(ansi reset)"
+        ^systemctl --user restart kanata.service
+    }
 }
