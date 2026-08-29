@@ -6,7 +6,7 @@ line-number = "relative"
 mouse = true
 bufferline = "multiple"
 cursorline = true
-rulers = [100]
+rulers = [80]
 color-modes = true
 popup-border = "all"
 
@@ -44,6 +44,9 @@ display-messages = true
 [editor.statusline]
 center = ["version-control"]
 
+[editor.soft-wrap]
+enable = true
+
 [keys.normal]
 "ret" = "goto_word"
 "esc" = ["collapse_selection", "keep_primary_selection"]
@@ -58,13 +61,7 @@ x = "select_line_below"
 X = "select_line_above"
 "A-l" = "add_newline_below"
 "A-S-l" = "add_newline_above"
-"C-S-s" = [
-  "move_prev_word_start",
-  "move_next_word_end",
-  "search_selection_detect_word_boundaries",
-  "select_all",
-  "select_regex"
-]
+"C-S-s" = ["move_prev_word_start", "move_next_word_end", "search_selection_detect_word_boundaries", "select_all", "select_regex"]
 "C-r" = ":config-reload"
 "S-d" = ["extend_to_line_bounds", "delete_selection"]
 "tab" = "flip_selections"
@@ -91,13 +88,7 @@ X = ":bco"
 [keys.normal."space"."g"]
 "p" = "changed_file_picker"
 "d" = ":reset-diff-change"
-"l" = [
-  ":new",
-  ":insert-output lazygit",
-  ":buffer-close!",
-  ":redraw",
-  ":rla"
-]  # Open lazy git
+"l" = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw", ":rla"]  # Open lazy git
 
 [keys.select]
 "esc" = ["collapse_selection", "normal_mode"]
