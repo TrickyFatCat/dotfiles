@@ -84,8 +84,10 @@ export def --env 'toggle kanata' [] {
     if not ($procs | is-empty) {
         print $"(ansi red)Stopping kanata process.(ansi reset)"
         $procs | each {|proc| kill $proc.pid} | ignore
+        notify-send "Kanata Service" "Kanata stopped working."
     } else {
         print $"(ansi green)Restarting kanata process.(ansi reset)"
         ^systemctl --user restart kanata.service
+        notify-send "Kanata Service" "Kanata start working."
     }
 }
