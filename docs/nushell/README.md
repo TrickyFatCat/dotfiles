@@ -104,6 +104,8 @@ They are used by various helper scripts, and integrations, e.g. mangoWM and Tele
 | `$env.SYS_MONITOR_TUI`  | Default system monitor for terminal |
 | `$env.BROWSER`          | Default browser                     |
 | `$env.BROWSER_APPID`    | Default browser appid               |
+| `$env.DISCORD_GUI`      | Default discord gui client          |
+| `$env.DISCORD_TUI`      | Default discord tui client          |
 
 > [!NOTE]
 > Set `$env.BROWSER_APPID` if class/appid of your browser differs from binary name.
@@ -117,7 +119,7 @@ To add a new module:
 
 1. Create it in `scripts/` directory
 2. Register in `config.nu` by adding `use my-cool-module.nu *`
-   - More about modules in Nushell can be found [**here**](https://www.nushell.sh/book/modules.html#modules)
+    - More about modules in Nushell can be found [**here**](https://www.nushell.sh/book/modules.html#modules)
 
 > [!NOTE]
 > `config.nu` adds `scripts/` to `$env.NU_LIB_DIRS`
