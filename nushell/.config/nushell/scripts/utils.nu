@@ -67,7 +67,7 @@ export def --env 'config bash' [] {
 #
 # name - a regex name pattern
 export def is-process-running [name: string] {
-    not (get-process-list $name | is-emty)
+    not (get-process-list $name | is-empty)
 }
 
 # Prints a list of running processes with a given name
