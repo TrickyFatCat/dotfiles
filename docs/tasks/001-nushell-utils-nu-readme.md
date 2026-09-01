@@ -11,6 +11,7 @@ context:
     - "nushell/.config/nushell/scripts/utils.nu"
 created_at: 2026-08-31
 owner: tech-docs-writer
+type: docs
 ---
 
 # Create readme for utility.nu

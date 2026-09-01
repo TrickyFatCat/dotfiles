@@ -13,6 +13,7 @@ context:
   - "television/.config/television/shell-scripts/"
 created_at: 2026-08-31
 owner: tech-docs-writer
+type: docs
 ---
 
 # Create television README.md

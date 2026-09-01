@@ -8,6 +8,7 @@ tags:
     - "docs"
 created_at: 2026-08-31
 owner: tech-docs-writer
+type: docs
 ---
 
 # Create repository README.md
