@@ -6,7 +6,8 @@ priority: medium
 type: docs
 tags: ["mango", "docs"]
 context:
-    - ""
+    - "mango/.config/mango/shell-scripts/"
+    - "mango/.config/mango/tricky-bindings.md"
 created_at: "2026-09-01"
 owner: tech-docs-writer
 ---

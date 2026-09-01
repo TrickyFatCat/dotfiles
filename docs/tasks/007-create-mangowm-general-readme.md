@@ -8,7 +8,7 @@ tags:
     - mango
     - docs
 context:
-    - "~/dotfiles/mango/.config/mango/"
+    - "mango/.config/mango/"
 created_at: "2026-09-01"
 owner: tech-docs-writer
 ---
