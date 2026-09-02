@@ -1,8 +1,8 @@
 ---
 id: "010"
 title: "Nushell. Create taskmd utility module"
-status: pending
-priority: medium
+status: in-progress
+priority: high
 owner: tricky-fat-cat
 dependencies: []
 tags:
