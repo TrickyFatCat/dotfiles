@@ -11,6 +11,9 @@ export-env {
 # Taskmd alias
 export alias tmd = ^taskmd
 
+# Taskmd list alias
+export alias 'tmd ls' = ^taskmd list
+
 # Starts web view
 export def 'tmd view' [] {
     ^taskmd web start --open
