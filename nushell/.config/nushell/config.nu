@@ -60,6 +60,7 @@ use terminal-registry.nu *
 use detect-terminal.nu *
 use mango-utils.nu *
 use arch-utils.nu *
+use taskmd-utils.nu *
 
 # ----------------------------- #
 #            Aliases            #

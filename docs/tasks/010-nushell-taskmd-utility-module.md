@@ -1,7 +1,7 @@
 ---
 id: "010"
 title: "Nushell. Create taskmd utility module"
-status: in-progress
+status: completed
 priority: high
 owner: tricky-fat-cat
 dependencies: []
@@ -31,11 +31,11 @@ Candidates:
 
 ## Tasks
 
-- [ ] Evaluate the list of the most used commands
-- [ ] Implement functions in `nushell/.config/nushell/scripts`
-- [ ] Add module to `nushell/.config/nushell/config.nu`
-- [ ] Validate config
-- [ ] Commit and push changes
+- [x] Evaluate the list of the most used commands
+- [x] Implement functions in `nushell/.config/nushell/scripts`
+- [x] Add module to `nushell/.config/nushell/config.nu`
+- [x] Validate config
+- [x] Commit and push changes
 
 ## Acceptance Criteria
 
