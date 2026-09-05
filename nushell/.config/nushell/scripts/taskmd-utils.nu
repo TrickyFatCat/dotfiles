@@ -4,10 +4,6 @@
 # Provides utility furctions for taskmd
 # Requires taskmd https://driangle.github.io/taskmd/ 
 
-export-env {
-    $env.TMD_CONFIG = "~/.taskmd.yaml"
-}
-
 # Taskmd alias
 export alias tmd = ^taskmd
 
@@ -87,7 +83,7 @@ def 'set status' [id: string, status: string, dry_run: bool = false] {
 #
 # id: id of a given task
 # --dry-run: Preview changes without writing to disk
-export def 'tmd start' [id: string, --dry-run, --quiet] {
+export def 'tmd start' [id: string, --dry-run] {
     set status $id in-progress $dry_run
 }
 
@@ -95,7 +91,7 @@ export def 'tmd start' [id: string, --dry-run, --quiet] {
 # 
 # id: id of a given task
 # --dry-run: Preview changes without writing to disk
-export def 'tmd complete' [id: string, --dry-run, --quiet] {
+export def 'tmd complete' [id: string, --dry-run] {
     set status $id completed $dry_run
 }
 
@@ -103,7 +99,7 @@ export def 'tmd complete' [id: string, --dry-run, --quiet] {
 # 
 # id: id of a given task
 # --dry-run: Preview changes without writing to disk
-export def 'tmd block' [id: string, --dry-run, --quiet] {
+export def 'tmd block' [id: string, --dry-run] {
     set status $id blocked $dry_run
 }
 
@@ -111,7 +107,7 @@ export def 'tmd block' [id: string, --dry-run, --quiet] {
 # 
 # id: id of a given task
 # --dry-run: Preview changes without writing to disk
-export def 'tmd cancel' [id: string, --dry-run, --quiet] {
+export def 'tmd cancel' [id: string, --dry-run] {
     set status $id cancelled $dry_run
 }
 
@@ -119,7 +115,7 @@ export def 'tmd cancel' [id: string, --dry-run, --quiet] {
 # 
 # id: id of a given task
 # --dry-run: Preview changes without writing to disk
-export def 'tmd review' [id: string, --dry-run, --quiet] {
+export def 'tmd review' [id: string, --dry-run] {
     set status $id in-review $dry_run
 }
 
@@ -127,7 +123,7 @@ export def 'tmd review' [id: string, --dry-run, --quiet] {
 # 
 # id: id of a given task
 # --dry-run: Preview changes without writing to disk
-export def 'tmd pending' [id: string, --dry-run, --quiet] {
+export def 'tmd pending' [id: string, --dry-run] {
     set status $id pending $dry_run
 }
 
@@ -163,7 +159,7 @@ def 'tmd set priority' [id: string, priority: string, dry_run: bool = false] {
 # 
 # id: id of a given task
 # --dry-run: Preview changes without writing to disk
-export def 'tmd low' [id: string, --dry-run, --quiet] {
+export def 'tmd low' [id: string, --dry-run] {
     tmd set priority $id low $dry_run
 }
 
@@ -171,7 +167,7 @@ export def 'tmd low' [id: string, --dry-run, --quiet] {
 # 
 # id: id of a given task
 # --dry-run: Preview changes without writing to disk
-export def 'tmd medium' [id: string, --dry-run, --quiet] {
+export def 'tmd medium' [id: string, --dry-run] {
     tmd set priority $id medium $dry_run
 }
 
@@ -179,7 +175,7 @@ export def 'tmd medium' [id: string, --dry-run, --quiet] {
 # 
 # id: id of a given task
 # --dry-run: Preview changes without writing to disk
-export def 'tmd high' [id: string, --dry-run, --quiet] {
+export def 'tmd high' [id: string, --dry-run] {
     tmd set priority $id high $dry_run
 }
 
@@ -187,6 +183,6 @@ export def 'tmd high' [id: string, --dry-run, --quiet] {
 # 
 # id: id of a given task
 # --dry-run: Preview changes without writing to disk
-export def 'tmd critical' [id: string, --dry-run, --quiet] {
+export def 'tmd critical' [id: string, --dry-run] {
     tmd set priority $id critical $dry_run
 }
