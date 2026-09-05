@@ -1,12 +1,13 @@
 ---
 id: "012"
 title: "Marksman. Create global config"
-status: pending
+status: completed
 priority: high
 dependencies: []
 tags: ["config"]
 created_at: 2026-09-03
 owner: tricky-fat-cat
+completed_at: 2026-09-06
 ---
 
 # Marksman. Create global config
@@ -17,12 +18,12 @@ Create a global config for marksman lsp with proper defaults
 
 ## Tasks
 
-- [ ] Create config in default config directory
-- [ ] Adjust proper defaults
-- [ ] Test tha it works
-- [ ] Migrate to dotfiles repository
-- [ ] Stow config
-- [ ] Commit a push
+- [x] Create config in default config directory
+- [x] Adjust proper defaults
+- [x] Test tha it works
+- [x] Migrate to dotfiles repository
+- [x] Stow config
+- [x] Commit a push
 
 ## Acceptance Criteria
 
