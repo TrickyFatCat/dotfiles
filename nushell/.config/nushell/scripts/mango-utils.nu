@@ -164,10 +164,15 @@ export def mwm-validate-config [config: string = "~/.config/mango/config.conf"] 
         error make ({msg: $"Invalid mango config path: ($path)"})
     }
 
-    ^mango -c $path -p
-}
+    let result = ^mango -c $path -p | complete
 
-# Prints the list of existing commands
-export def mwm-list-commands [] {
-    help commands | where name starts-with mwm- | select name description
+    if $result.exit_code > 0 {
+        notify-send "MangoWM" $"ERROR: Config is ivalid."
+        $result.stdout | wl-copy
+    }
+
+    # Prints the list of existing commands
+    export def mwm-list-commands [] {
+        help commands | where name starts-with mwm- | select name description
+    }
 }
