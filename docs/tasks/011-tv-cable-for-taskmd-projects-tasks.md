@@ -1,12 +1,13 @@
 ---
 title: "TV cable for taskmd projects/tasks"
 id: "011"
-status: pending
+status: cancelled
 priority: medium
 type: feature
 tags: ["television", "mango", "config"]
 created_at: "2026-09-01"
 owner: tricky-fat-cat
+cancelled_at: 2026-09-05
 ---
 
 # TV cable for taskmd projects/tasks
@@ -22,10 +23,4 @@ The idea is that User can:
 3. Open tasks in the editor
 4. Quickly change status
 
-## Tasks
-
-- [ ] TODO
-
-## Acceptance Criteria
-
-- TODO
+Cancelled as it's not needed at this moment
