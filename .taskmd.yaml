@@ -1,1 +1,3 @@
 dir: ./docs/tasks
+worklogs: true
+workflow: "solo"
