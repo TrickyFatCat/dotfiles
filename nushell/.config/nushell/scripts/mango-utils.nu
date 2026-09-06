@@ -25,7 +25,7 @@ export def mwm-get-client-id [appid?: string, --title: string] {
 # Checks if there's a client of a given appid and/or title is opened
 # 
 # appid: appid/class of a target app
-# # --title: title of a target app
+# --title: title of a target app
 export def mwm-is-client-opened [appid?: string, --title: string] {
     if $appid == null and $title == null {
         return false
@@ -42,21 +42,36 @@ export def mwm-get-all-clients [fields?: list<string>] {
 
     if ($fields | is-empty) {
         $clients
+        return
+    }
+
+    let valid_fields = (mwm-get-client-field-names)
+
+    let invalid_fields = $fields | where {|field| $field not-in $valid_fields}
+
+    if not ($invalid_fields | is-empty) {
+        print -e $"Invalid fields. Valid fields are:\n($valid_fields | table)"
+        $valid_fields
+        return
     }
 
     $clients | select ...$fields
 }
 
-# Returns a current tag of a focused monitorm
+# Returns a current tag of a focused monitor
 export def mwm-get-active-tag [] {
-    mmsg get all-tags
-    | from json
-    | get all_tags
-    | flatten tags
-    | flatten
-    | where is_active == true
-    | get index
+    let monitor = (
+        mmsg get all-monitors
+        | from json
+        | get monitors
+        | where active == true
+        | get name
+        | first
+    )
+
+    mwm-get-tags $monitor --active
     | first
+    | to text
     | into int
 }
 
@@ -124,8 +139,7 @@ export def mwm-get-tags [monitor: string, --active] {
     let monitor_data = mmsg get tags $monitor | from json
 
     if $active {
-        $monitor_data | get active_tags
-        return
+        return ($monitor_data | get active_tags)
     }
 
     $monitor_data | get tags
@@ -149,7 +163,6 @@ export def mwm-get-last-open-surface [] {
 # Checks if tag value is valid
 def is-valid-tag [tag: int] {
     if ($tag <= 0) or ($tag > 9) {
-        # error make {msg: $"tag must be greater than 0 and less or equal 9, got ($tag)"}
         print -e $"tag must be greater than 0 and less or equal 9, got ($tag)"
         return false
     }
@@ -167,12 +180,15 @@ export def mwm-validate-config [config: string = "~/.config/mango/config.conf"] 
     let result = ^mango -c $path -p | complete
 
     if $result.exit_code > 0 {
-        notify-send "MangoWM" $"ERROR: Config is ivalid."
-        $result.stdout | wl-copy
+        let err = $result.stderr | ansi strip
+        $err | wl-copy
+        notify-send "MangoWM" $"ERROR: Config is invalid.\n($err)"
     }
 
-    # Prints the list of existing commands
-    export def mwm-list-commands [] {
-        help commands | where name starts-with mwm- | select name description
-    }
+    return $result.stderr
+}
+
+# Prints the list of existing commands
+export def mwm-list-commands [] {
+    help commands | where name starts-with mwm- | select name description
 }
