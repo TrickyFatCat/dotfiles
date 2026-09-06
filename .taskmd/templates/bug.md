@@ -1,31 +1,23 @@
 ---
 _template:
   name: bug
-  description: "Bug report with reproduction steps"
+  description: "Repository issue requiring user triage"
 title: "{{title}}"
 id: "{{id}}"
 status: pending
-priority: high
+priority: medium
 type: bug
+owner: tricky-fat-cat
 tags: []
 created_at: "{{date}}"
 ---
 
 # {{title}}
 
-## Steps to Reproduce
+## Description
 
-1. ...
+<What is wrong and why it matters.>
 
-## Expected Behavior
+## Context
 
-<!-- What should happen -->
-
-## Actual Behavior
-
-<!-- What actually happens -->
-
-## Environment
-
-- OS:
-- Version:
+<Relevant file(s), task, or other evidence that exposed the problem.>
