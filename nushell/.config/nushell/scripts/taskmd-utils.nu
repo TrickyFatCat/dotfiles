@@ -1,7 +1,7 @@
 #---------------------
 # TASKMD UTILITY MODULE
 #---------------------
-# Provides utility furctions for taskmd
+# Provides utility functions for taskmd
 # Requires taskmd https://driangle.github.io/taskmd/ 
 
 # Taskmd alias
@@ -30,7 +30,7 @@ export def 'tmd show' [task: string, --json] {
     mut args = [$task]
 
     if $json {
-        $args = ($args | append $"--format=json")
+        $args = ($args | append "--format=json")
     }
 
     ^taskmd get ...$args
@@ -46,7 +46,7 @@ export def 'tmd rename' [id: string, title: string, --dry-run] {
     mut args = [$id, "--title", $title]
 
     if $dry_run {
-        $args = ($args | append $"--dry-run")
+        $args = ($args | append "--dry-run")
     }
 
     tmd set ...$args
@@ -66,14 +66,14 @@ def 'set status' [id: string, status: string, dry_run: bool = false] {
     let cur_status = tmd show $id --json | from json | get status
 
     if $status == $cur_status {
-        print -e $"Task is already has status ($status)."
+        print -e $"Task already has status ($status)."
         return
     }
 
     mut args = [$id, "--status", $status]
 
     if $dry_run {
-        $args = ($args | append $"--dry-run")
+        $args = ($args | append "--dry-run")
     }
 
     tmd set ...$args
@@ -142,7 +142,7 @@ def 'tmd set priority' [id: string, priority: string, dry_run: bool = false] {
     let cur_priority = tmd show $id --json | from json | get priority
 
     if $priority == $cur_priority {
-        print -e $"Task is already has priority ($priority)."
+        print -e $"Task already has priority ($priority)."
         return
     }
 
@@ -152,7 +152,7 @@ def 'tmd set priority' [id: string, priority: string, dry_run: bool = false] {
         $args = ($args | append "--dry-run")
     }
 
-    ^taskmd set ...$args
+    tmd set ...$args
 }
 
 # Sets priority of a given task to low
