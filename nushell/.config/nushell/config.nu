@@ -14,6 +14,13 @@ $env.config.use_kitty_protocol = true
 $env.config.edit_mode = 'helix'
 
 # ----------------------------- #
+#            Prompt             #
+# ----------------------------- #
+
+$env.PROMPT_INDICATOR_VI_NORMAL = "󰆾 "
+$env.PROMPT_INDICATOR_VI_INSERT = "󰏫 "
+
+# ----------------------------- #
 #             PATH              #
 # ----------------------------- #
 use std/util "path add"
