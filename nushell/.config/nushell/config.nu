@@ -10,6 +10,9 @@ $env.config.show_banner = false
 # Enable kitty protocol
 $env.config.use_kitty_protocol = true
 
+# Helix mode
+$env.config.edit_mode = 'helix'
+
 # ----------------------------- #
 #             PATH              #
 # ----------------------------- #
