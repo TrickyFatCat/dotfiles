@@ -1,0 +1,42 @@
+[metadata]
+name = "mango-layout-picker"
+requirements = ["nu", "mango"]
+description = """
+A channel to switch layout for current tag in MangoWM.
+"""
+
+[source]
+command = "mmsg get layouts | from json | get layouts.name | str title-case | to text"
+display = "{}"
+shell = "nu"
+
+# [preview]
+# command = ""
+# shell = "nu"
+
+[ui.input_bar]
+header = "Mango Layout"
+
+[ui.remote_control]
+disabled = true
+
+[ui.preview_panel]
+hidden = true
+
+[ui.status_bar]
+hidden = true
+
+[keybindings]
+tab = "select_next_entry"
+backtab = "select_prev_entry"
+ctrl-j = "select_next_entry"
+ctrl-k = "select_prev_entry"
+q = "quit"
+enter = "actions:switch"
+
+[actions.switch]
+description = "Switches current tag's layout"
+# command = '''mmsg dispatch setlayout, {lower|replace:s/ /_/g}; quit'''
+command = "~/.config/television/shell-scripts/switch-mango-layout.nu {}"
+shell = "nu"
+mode = "fork"
