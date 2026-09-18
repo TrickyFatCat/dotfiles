@@ -11,29 +11,62 @@ export def --env env-or [name: string, fallback] {
     $env | get -o $name | default $fallback
 }
 
-# Walk up the process tree from `start_pid` and return the nearest ancestor
-# whose process name is in `names`.
-# Returns null if no match is found.
+# Read a process's name and parent pid from /proc.
 #
-# Example:
-#   find-ancestor-by-name $nu.pid ["kitty" "alacritty" "wezterm"]
+# Returns null if the process does not exist. Reads /proc directly rather
+# than calling `ps`, which costs about 100ms per call because it samples
+# CPU usage.
+#
+# Linux only.
+def proc-info [pid: int] {
+    let path = $"/proc/($pid)/status"
+    if not ($path | path exists) { return null }
+    let lines = open --raw $path | lines
+    {
+        name: (
+            $lines
+            | where {|l| $l starts-with "Name:" }
+            | first
+            | split row "\t"
+            | last
+            | str trim
+        )
+        ppid: (
+            $lines
+            | where {|l| $l starts-with "PPid:" }
+            | first
+            | split row "\t"
+            | last
+            | str trim
+            | into int
+        )
+    }
+}
+
+# Walk up the process tree and find the nearest ancestor with a matching name.
+#
+# Starts at `start_pid` and follows parent pids upward. Returns the pid of the
+# first process whose name appears in `names`, or null if the walk reaches pid 1
+# without a match.
+#
+# Names come from /proc, which truncates them to 15 characters. Entries in
+# `names` longer than that will never match.
+# 
+# @example "find the terminal running this shell" {
+#     find-ancestor-by-name $nu.pid ["foot" "kitty" "alacritty"]
+# } --result 4242
 export def find-ancestor-by-name [start_pid: int, names: list<string>] {
     mut current = $start_pid
     mut seen = []
     loop {
-        if $current == 1 or $current in $seen {
-            return null
-        }
+        # `seen` guards against a cycle, which should not happen but would
+        # otherwise hang the loop forever.
+        if $current <= 1 or $current in $seen { return null }
         $seen = ($seen | append $current)
-        let row = ps | where pid == $current
-        if ($row | is-empty) {
-            return null
-        }
-        let name = $row | get name | first
-        if $name in $names {
-            return $current
-        }
-        $current = ($row | get ppid | first)
+        let info = (proc-info $current)
+        if $info == null { return null }
+        if $info.name in $names { return $current }
+        $current = $info.ppid
     }
 }
 
