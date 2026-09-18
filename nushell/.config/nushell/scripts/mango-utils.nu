@@ -192,3 +192,8 @@ export def mwm-validate-config [config: string = "~/.config/mango/config.conf"] 
 export def mwm-list-commands [] {
     help commands | where name starts-with mwm- | select name description
 }
+
+# Returns a list of all layout names
+export def mwm-get-layouts-names [] {
+    mmsg get layouts | from json | get layouts.name
+}
