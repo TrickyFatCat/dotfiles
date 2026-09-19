@@ -51,6 +51,9 @@ $env.BROWSER_APPID = "zen"
 $env.DISCORD_GUI = "vesktop"
 $env.DISCORD_TUI = "concord"
 
+# tuxedo default todo directory
+$env.TODO_DIR = $env.HOME | path join "Documents"
+
 # ----------------------------- #
 #            Modules            #
 # ----------------------------- #
@@ -133,6 +136,9 @@ alias lst = ^eza -a -T -L 3 --git-ignore --icons always
 
 # Fastfetch
 alias ff = ^fastfetch
+
+# Tuxedo
+alias todo = ^tuxedo
 
 # ----------------------------- #
 #          Integratinos         #
