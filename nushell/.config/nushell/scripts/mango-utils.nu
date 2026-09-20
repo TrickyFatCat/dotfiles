@@ -5,7 +5,10 @@
 # --title: title of a target app
 export def mwm-get-client-id [appid?: string, --title: string] {
     if ($appid == null) and ($title == null) {
-        error make ("Invalid function call. Provide at least appid or --title.")
+        error make --unspanned {
+            msg: $"Invalid function call."
+            help: $"Provide at least an appid and/or (ansi blue)--title(ansi reset)."
+        }
     }
 
     let clients = mmsg get all-clients | from json | get clients
@@ -50,8 +53,10 @@ export def mwm-get-all-clients [fields?: list<string>] {
     let invalid_fields = $fields | where {|field| $field not-in $valid_fields}
 
     if not ($invalid_fields | is-empty) {
-        print -e $"Invalid fields. Valid fields are:\n($valid_fields | table)"
-        $valid_fields
+        error make --unspanned {
+            msg: $"(ansi red)Invalid fields(ansi reset)"
+            help: $"Valid fields are:\n($valid_fields | table)"
+        }
         return
     }
 
@@ -170,11 +175,13 @@ def is-valid-tag [tag: int] {
 }
 
 # Validates a given mango config
+# TODO: Add check if the path is a dirctory
+# TODO: Add check if the file is .conf file
 export def mwm-validate-config [config: string = "~/.config/mango/config.conf"] {
     let path = $config | path expand
 
     if not ($path | path exists) {
-        error make ({msg: $"Invalid mango config path: ($path)"})
+        error make --unspanned {msg: $"Invalid mango config path: (ansi yellow)($path)(ansi reset)"}
     }
 
     let result = ^mango -c $path -p | complete
