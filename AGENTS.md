@@ -17,6 +17,17 @@ Agents should make minimal, task-focused changes and preserve existing repositor
 - Do not perform opportunistic refactoring, cleanup, reformatting, or unrelated changes.
 - Respect explicit approval and review gates before continuing past them.
 
+# Allowed Work
+
+Agents may work only on:
+
+- an eligible taskmd task; or
+- a direct request from the user in the current session.
+
+Do not start work that neither source asks for, even when it looks useful. Record other issues as a `bug` task, as described under Repository Changes.
+
+For a direct request, the request is the active task for every rule in this file that refers to the active task.
+
 # Task Management
 
 This repository uses taskmd for work tracking.
@@ -55,6 +66,8 @@ Creating a bug task records the issue; it does not authorize the agent to work o
 # Git Safety
 
 Do not commit or push incomplete or unapproved task work.
+
+Commit or push work from a direct request only when the user asks for it.
 
 Follow `/docs/tasks/AGENTS.md` for the task completion, validation, commit, and push workflow.
 
