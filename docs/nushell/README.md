@@ -149,3 +149,4 @@ Check it structure, and make sure that it uses `autoload/` directory.
 
 - [Terminal Registry](./terminal-registry-readme.md) — helper module for opening terminal apps through `$env.TERMINAL`.
 - [Mango Utils](/docs/nushell/mango-utils-readme.md) - utility module to control MangoWM using its IPC
+- [Utils](./utils-readme.md) — helper module with general commands for environment variables, processes, files and kanata.

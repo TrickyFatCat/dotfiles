@@ -1,7 +1,7 @@
 ---
 id: "001"
 title: "Create readme for utility.nu"
-status: pending
+status: completed
 priority: medium
 dependencies: []
 tags:
@@ -12,6 +12,7 @@ context:
 created_at: 2026-08-31
 owner: tech-docs-writer
 type: docs
+completed_at: 2026-09-27
 ---
 
 # Create readme for utility.nu
@@ -22,12 +23,12 @@ Create readme for `utility.nu`
 
 ## Tasks
 
-- [ ] Write docs for `utility.nu`
-- [ ] Run review with `tech-docs-writer` and `i-have-adhd` subagents and find a consesus
-- [ ] Wait for user review
-- [ ] After approval
-    - [ ] Add a link to the file in `/docs/nushell/README.md`
-    - [ ] Finish the task
+- [x] Write docs for `utility.nu`
+- [x] Run review with `tech-docs-writer` and `i-have-adhd` subagents and find a consesus
+- [x] Wait for user review
+- [x] After approval
+    - [x] Add a link to the file in `/docs/nushell/README.md`
+    - [x] Finish the task
 
 ## Acceptance Criteria
 
