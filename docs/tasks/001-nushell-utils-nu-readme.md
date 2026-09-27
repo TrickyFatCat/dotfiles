@@ -23,15 +23,14 @@ Create readme for `utility.nu`
 ## Tasks
 
 - [ ] Write docs for `utility.nu`
-- [ ] Run review with `tech-docs-reviewer` and `i-have-adhd` subagents
+- [ ] Run review with `tech-docs-writer` and `i-have-adhd` subagents and find a consesus
 - [ ] Wait for user review
 - [ ] After approval
     - [ ] Add a link to the file in `/docs/nushell/README.md`
-    - [ ] Create a usage report
     - [ ] Finish the task
 
 ## Acceptance Criteria
 
 - Readme for `utility.nu` is created in `/docs/nushell`
 - The document is approved by the user
-- Document is linked in `/docs/neshell/README.md`
+- Document is linked in `/docs/nushell/README.md`
