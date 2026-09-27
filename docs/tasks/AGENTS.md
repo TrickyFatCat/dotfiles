@@ -6,7 +6,7 @@ Taskmd manages task structure and lifecycle. The rules below define how agents m
 
 ## Agent Eligibility
 
-Agents may work only on tasks whose `owner` explicitly includes `agent`.
+Agents may work only on tasks whose `owner` explicitly includes an agent owner: `agent` or `tech-docs-writer`.
 
 This is a hard safety boundary:
 
@@ -73,7 +73,7 @@ Use taskmd commands for task lifecycle operations when taskmd provides the corre
 When the user specifies a task:
 
 1. Inspect that task.
-2. Verify that its `owner` includes `agent`.
+2. Verify that its `owner` includes an agent owner.
 3. Do not work on it if it fails the ownership rule.
 
 When the user does not specify a task:
@@ -89,7 +89,7 @@ When the user does not specify a task:
 Before changing a task to `in-progress`:
 
 1. Read the complete task.
-2. Confirm that `owner` includes `agent`.
+2. Confirm that `owner` includes an agent owner.
 3. Confirm that all blocking dependencies are satisfied.
 4. Resolve the task Context:
 

@@ -30,11 +30,11 @@ Before selecting, starting, modifying, or completing a task, follow:
 
 Repository-wide task safety rules:
 
-- Agents may work only on tasks whose `owner` explicitly includes `agent`.
+- Agents may work only on tasks whose `owner` explicitly includes an agent owner: `agent` or `tech-docs-writer`.
 - The ownership restriction is a hard boundary and must not be bypassed, even when the user names an ineligible task.
 - Agent tasks require usable task Context before work begins.
 - Explicit user-review or approval gates must be respected.
-- A task may be completed only when all required ToDo items and Acceptance Criteria are satisfied.
+- A task may be completed only when all required Tasks or ToDo items and Acceptance Criteria are satisfied.
 
 # Repository Changes
 
