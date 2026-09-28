@@ -41,12 +41,15 @@ Must NOT:
 ## Tasks
 
 - [ ] Create `README.md` for television setup
-- [ ] Run review with `tech-docs-reviewer` and `i-have-adhd` subagents
+- [ ] Run review with `tech-docs-writer` sub-agent and find consensus
 - [ ] Wait for user review
 - [ ] After approval
     - [ ] Add a link to the file in repository `READMY.md`
-    - [ ] Create a usage report
     - [ ] Finish the task
+    - [ ] Commint changes
+    - [ ] Merge to main
+    - [ ] Delete worktree
+    - [ ] Delete local and origin branches
 
 ## Acceptance Criteria
 
