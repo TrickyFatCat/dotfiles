@@ -36,12 +36,16 @@ Must NOT:
 ## Tasks
 
 - [ ] Write `README.md` for MangoWM conifiguration
-- [ ] Run review with `tech-docs-reviewer` and `i-have-adhd` subagents
+- [ ] Run review with `tech-docs-reviewer` sub-agent as a review partner
+    - [ ] Give a document for review before a cold reader, find consensus
+    - [ ] Asses changes based on cold reader questions, find consensus
 - [ ] Wait for user review
 - [ ] After approval
-    - [ ] Add a link to the file in parent
-    - [ ] Create a usage report
-    - [ ] Finish the task
+    - [ ] Add a link to the file in parent readme.md
+    - [ ] Commit changes
+    - [ ] Merge to main
+    - [ ] Remove a worktree
+    - [ ] Deled local and oringin branches
 
 ## Acceptance Criteria
 
