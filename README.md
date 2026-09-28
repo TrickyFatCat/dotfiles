@@ -25,7 +25,7 @@ in this repository.
 | `helix`      | [Helix](https://helix-editor.com/)                         | Text editor                                |                                                 |
 | `kanata`     | [kanata](https://github.com/jtroo/kanata)                  | Keyboard remapping                         |                                                 |
 | `leaf`       | [leaf](https://leaf.rivolink.mg/)                          | Terminal Markdown previewer                |                                                 |
-| `mango`      | [MangoWM](https://github.com/mangowm/mango)                | Wayland compositor                         |                                                 |
+| `mango`      | [MangoWM](https://github.com/mangowm/mango)                | Wayland compositor                         | [MangoWM Setup](docs/mango/README.md)           |
 | `marksman`   | [Marksman](https://github.com/artempyanykh/marksman)       | Markdown language server                   |                                                 |
 | `mpv`        | [mpv](https://mpv.io/)                                     | Media player                               |                                                 |
 | `msnap`      | [msnap](https://github.com/xtheeq/msnap)                   | Screenshot and screencast tool for MangoWM |                                                 |

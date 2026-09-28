@@ -1,7 +1,7 @@
 ---
 title: "Create MangoWM general README"
 id: "007"
-status: pending
+status: completed
 priority: medium
 type: docs
 tags:
@@ -11,6 +11,7 @@ context:
     - "mango/.config/mango/"
 created_at: "2026-09-01"
 owner: tech-docs-writer
+completed_at: 2026-09-29
 ---
 
 # Create readme for utility.nu
@@ -35,14 +36,14 @@ Must NOT:
 
 ## Tasks
 
-- [ ] Write `README.md` for MangoWM conifiguration
-- [ ] Run review with `tech-docs-reviewer` sub-agent as a review partner
-    - [ ] Give a document for review before a cold reader, find consensus
-    - [ ] Asses changes based on cold reader questions, find consensus
-- [ ] Wait for user review
+- [x] Write `README.md` for MangoWM conifiguration
+- [x] Run review with `tech-docs-reviewer` sub-agent as a review partner
+    - [x] Give a document for review before a cold reader, find consensus
+    - [x] Asses changes based on cold reader questions, find consensus
+- [x] Wait for user review
 - [ ] After approval
-    - [ ] Add a link to the file in parent readme.md
-    - [ ] Commit changes
+    - [x] Add a link to the file in parent readme.md
+    - [x] Commit changes
     - [ ] Merge to main
     - [ ] Remove a worktree
     - [ ] Deled local and oringin branches
