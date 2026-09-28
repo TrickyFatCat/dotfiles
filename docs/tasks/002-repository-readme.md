@@ -30,14 +30,19 @@ Must NOT:
 
 - Have instructions how to install apps
 
+The goal is a high-quality documentation for humans.
+
 ## Tasks
 
 - [ ] Create `README.md` for the ropostory
-- [ ] Run review with `tech-docs-reviewer` and `i-have-adhd` subagents
+- [ ] Run review with `tech-docs-writer` sub-agent and find a consensus.
 - [ ] Wait for user review
 - [ ] After approval
-    - [ ] Create a usage report
     - [ ] Finish the task
+    - [ ] Commit
+    - [ ] Merge to main
+    - [ ] Remove worktree
+    - [ ] Remove branch locally and in origin
 
 ## Acceptance Criteria
 
