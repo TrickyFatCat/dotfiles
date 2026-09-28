@@ -41,12 +41,12 @@ Must NOT:
     - [x] Give a document for review before a cold reader, find consensus
     - [x] Asses changes based on cold reader questions, find consensus
 - [x] Wait for user review
-- [ ] After approval
+- [x] After approval
     - [x] Add a link to the file in parent readme.md
     - [x] Commit changes
-    - [ ] Merge to main
-    - [ ] Remove a worktree
-    - [ ] Deled local and oringin branches
+    - [x] Merge to main
+    - [x] Remove a worktree
+    - [x] Deled local and oringin branches
 
 ## Acceptance Criteria
 
