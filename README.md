@@ -31,7 +31,7 @@ in this repository.
 | `msnap`      | [msnap](https://github.com/xtheeq/msnap)                   | Screenshot and screencast tool for MangoWM |                                                 |
 | `nushell`    | [Nushell](https://www.nushell.sh/)                         | Shell                                      | [Nushell Configuration](docs/nushell/README.md) |
 | `starship`   | [Starship](https://starship.rs/)                           | Shell prompt                               |                                                 |
-| `television` | [television](https://alexpasmantier.github.io/television/) | Fuzzy finder                               |                                                 |
+| `television` | [television](https://alexpasmantier.github.io/television/) | Fuzzy finder                               | [Television Setup](docs/television/README.md)   |
 | `zellij`     | [Zellij](https://zellij.dev/)                              | Terminal workspace                         |                                                 |
 
 ## Linking with Stow

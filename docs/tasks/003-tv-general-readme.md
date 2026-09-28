@@ -1,7 +1,7 @@
 ---
 id: "003"
 title: "Television. Create README.md"
-status: pending
+status: completed
 priority: low
 dependencies: ["002"]
 tags:
@@ -10,10 +10,12 @@ tags:
 context:
   - "television/.config/television/cable/explorer-configs.toml"
   - "television/.config/television/cable/explorer-gitrepos.toml"
+  - "television/.config/television/cable/mango-layout-picker.toml"
   - "television/.config/television/shell-scripts/"
 created_at: 2026-08-31
 owner: tech-docs-writer
 type: docs
+completed_at: 2026-09-28
 ---
 
 # Create television README.md
@@ -28,6 +30,7 @@ Must have:
 2. Concise description of custom cable files:
     - `explorer-configs.toml`
     - `explorer-gitrepos.toml`
+    - `mango-layout-picker.toml`
 3. Concise description of shell-scripts in `shell-scripts` directory
 4. Link to `~/dotfiles/docs/television/preview-git-repo-readme.md`
 
@@ -40,16 +43,16 @@ Must NOT:
 
 ## Tasks
 
-- [ ] Create `README.md` for television setup
-- [ ] Run review with `tech-docs-writer` sub-agent and find consensus
-- [ ] Wait for user review
-- [ ] After approval
-    - [ ] Add a link to the file in repository `READMY.md`
-    - [ ] Finish the task
-    - [ ] Commint changes
-    - [ ] Merge to main
-    - [ ] Delete worktree
-    - [ ] Delete local and origin branches
+- [x] Create `README.md` for television setup
+- [x] Run review with `tech-docs-writer` sub-agent and find consensus
+- [x] Wait for user review
+- [x] After approval
+    - [x] Add a link to the file in repository `README.md`
+    - [x] Finish the task
+    - [x] Commit changes
+    - [x] Merge to main
+    - [x] Delete worktree
+    - [x] Delete local and origin branches
 
 ## Acceptance Criteria
 
