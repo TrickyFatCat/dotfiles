@@ -1,7 +1,7 @@
 ---
 id: "002"
 title: "Create repository README.md"
-status: pending
+status: completed
 priority: high
 dependencies: []
 tags:
@@ -9,6 +9,26 @@ tags:
 created_at: 2026-08-31
 owner: tech-docs-writer
 type: docs
+context:
+    - "bash"
+    - "dprint"
+    - "fastfetch"
+    - "foot"
+    - "helix"
+    - "kanata"
+    - "leaf"
+    - "mango"
+    - "marksman"
+    - "mpv"
+    - "msnap"
+    - "nushell"
+    - "starship"
+    - "systemd"
+    - "television"
+    - "zellij"
+    - ".gitignore"
+    - "docs/nushell/README.md"
+completed_at: 2026-09-28
 ---
 
 # Create repository README.md
@@ -34,15 +54,15 @@ The goal is a high-quality documentation for humans.
 
 ## Tasks
 
-- [ ] Create `README.md` for the ropostory
-- [ ] Run review with `tech-docs-writer` sub-agent and find a consensus.
-- [ ] Wait for user review
-- [ ] After approval
-    - [ ] Finish the task
-    - [ ] Commit
-    - [ ] Merge to main
-    - [ ] Remove worktree
-    - [ ] Remove branch locally and in origin
+- [x] Create `README.md` for the ropostory
+- [x] Run review with `tech-docs-writer` sub-agent and find a consensus.
+- [x] Wait for user review
+- [x] After approval
+    - [x] Finish the task
+    - [x] Commit
+    - [x] Merge to main
+    - [x] Remove worktree
+    - [x] Remove branch locally and in origin
 
 ## Acceptance Criteria
 
