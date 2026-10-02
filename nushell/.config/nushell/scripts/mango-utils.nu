@@ -186,7 +186,7 @@ export def mwm-validate-config [config: string = "~/.config/mango/config.conf"] 
 
     let result = ^mango -c $path -p | complete
 
-    if $result.exit_code > 0 {
+    if ($result.exit_code > 0) or ($result.stderr | is-not-empty) {
         let err = $result.stderr | ansi strip
         $err | wl-copy
         notify-send "MangoWM" $"ERROR: Config is invalid.\n($err)"
